@@ -1,8 +1,29 @@
 import 'package:yupcity_admin/models/user.dart';
 import 'package:equatable/equatable.dart';
+import 'package:yupcity_admin/models/yupcity_register.dart';
+import 'package:yupcity_admin/models/yupcity_trap_poi.dart';
 
 abstract class DashboardBlocEvent extends Equatable {
   const DashboardBlocEvent();
+}
+
+class GetAllDataEvent extends DashboardBlocEvent{
+
+  const GetAllDataEvent();
+  @override
+  List<Object> get props => [];
+
+}
+
+class UpdateAllDataEvent extends DashboardBlocEvent{
+  final List<YupcityUser> allUsers;
+  final List<YupcityUser> allTraps;
+  final List<YupcityRegister> allRegistries;
+
+  const UpdateAllDataEvent(this.allUsers, this.allTraps,this.allRegistries);
+  @override
+  List<Object> get props => [];
+
 }
 
 class GetUserDataEvent extends DashboardBlocEvent{
@@ -13,63 +34,15 @@ class GetUserDataEvent extends DashboardBlocEvent{
 
 }
 
+class SetPoiEvent extends DashboardBlocEvent{
+  final YupcityTrapPoi newTrap;
 
-class GetUserByUsernameDataEvent extends DashboardBlocEvent{
+  const SetPoiEvent(this.newTrap);
 
-  final String userName;
-
-  const GetUserByUsernameDataEvent(this.userName);
-
-  @override
-  List<Object> get props => [];
-
-}
-
-class GetPoiDataEvent extends DashboardBlocEvent {
-
-  const GetPoiDataEvent();
-
-  @override
-  List<Object> get props => [];
+@override
+List<Object> get props => [];
 
 }
 
 
-class SavePoiDataEvent extends DashboardBlocEvent {
-
-  final String center;
-
-  final String centerDescription;
-
-  final double latitude;
-
-  final double longuitude;
-
-
-  const SavePoiDataEvent(this.center, this.centerDescription, this.latitude, this.longuitude);
-
-  @override
-  List<Object> get props => [];
-
-}
-
-
-
-class UpdateUserDataEvent extends DashboardBlocEvent{
-
-  final String name;
-
-  final String bio;
-
-  final int theme;
-
-  final String background;
-
-  final bool needsReturn;
-
-  const UpdateUserDataEvent(this.name, this.bio, this.theme, this.background, this.needsReturn);
-  @override
-  List<Object> get props => [];
-
-}
 

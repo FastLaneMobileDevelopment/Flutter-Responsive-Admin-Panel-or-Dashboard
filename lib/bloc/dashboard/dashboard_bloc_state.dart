@@ -1,3 +1,4 @@
+import 'package:yupcity_admin/models/yupcity_register.dart';
 import 'package:yupcity_admin/models/yupcity_trap_poi.dart';
 import 'package:yupcity_admin/models/user.dart';
 import 'package:equatable/equatable.dart';
@@ -11,44 +12,32 @@ class InitialBoardBlocState extends DashboardBlocState {
   List<Object> get props => [];
 }
 
-class UpdatingUserBlocState extends DashboardBlocState {
+class LoadingBoardBlocState extends DashboardBlocState {
   @override
   List<Object> get props => [];
 }
 
-class UpdatedUserBlocState extends DashboardBlocState {
+class UpdatedBoardBlocState extends DashboardBlocState {
+  final List<YupcityUser> allUsers;
+  final List<YupcityTrapPoi> allTraps;
+  final List<YupcityRegister> registries;
 
-  final YupcityUser user;
-
-  const UpdatedUserBlocState(this.user);
-
+  const UpdatedBoardBlocState(this.allUsers, this.allTraps, this.registries);
   @override
   List<Object> get props => [];
 }
 
-class PoiDataBlocState extends DashboardBlocState {
+class ErrorBoardBlocState extends DashboardBlocState {
 
-  final List<YupcityTrapPoi> listOfPois;
+  final String error;
 
-  const PoiDataBlocState(this.listOfPois);
-
+  const ErrorBoardBlocState(this.error);
   @override
   List<Object> get props => [];
 }
 
-class FinishUpdatingUserBlocState extends DashboardBlocState {
+class SepPoiBoardBlocState extends DashboardBlocState {
   @override
   List<Object> get props => [];
 }
 
-class ErrorUpdatingUserBlocState extends DashboardBlocState{
-
-
-  final String message;
-
-  const ErrorUpdatingUserBlocState(this.message);
-
-  @override
-  List<Object> get props => [message];
-
-}

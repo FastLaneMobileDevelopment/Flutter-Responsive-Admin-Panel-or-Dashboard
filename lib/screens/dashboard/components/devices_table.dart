@@ -2,13 +2,18 @@ import 'package:yupcity_admin/models/Device.dart';
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:yupcity_admin/models/user.dart';
+import 'package:yupcity_admin/models/yupcity_trap_poi.dart';
 
 import '../../../constants.dart';
 
 class DevicesTable extends StatelessWidget {
-  const DevicesTable({
-    Key? key,
-  }) : super(key: key);
+
+
+  final List<YupcityUser> allUser;
+  final List<YupcityTrapPoi> allTraps;
+
+  DevicesTable(this.allUser, this.allTraps);
 
   @override
   Widget build(BuildContext context) {
@@ -32,24 +37,19 @@ class DevicesTable extends StatelessWidget {
               minWidth: 1600,
               columns: [
                 DataColumn(
-                  label: Text("Lugar"),
+                  label: Text("Nombre / Lugar"),
                 ),
                 DataColumn(
-                  label: Text("Usos total"),
+                  label: Text("Nº de usos"),
                 ),
                 DataColumn(
-                  label: Text("Nombre"),
+                  label: Text("Descripción"),
                 ),
-                DataColumn(
-                  label: Text("Estado"),
-                ),
-                DataColumn(
-                  label: Text("Última revisión"),
-                ),
+
               ],
               rows: List.generate(
-                demoDevices.length,
-                (index) => devicesDataRow(demoDevices[index]),
+                allTraps.length,
+                (index) => devicesDataRow(allTraps[index]),
               ),
             ),
           ),
@@ -59,28 +59,28 @@ class DevicesTable extends StatelessWidget {
   }
 }
 
-DataRow devicesDataRow(Device fileInfo) {
+DataRow devicesDataRow(YupcityTrapPoi trap) {
   return DataRow(
     cells: [
       DataCell(
         Row(
           children: [
-            SvgPicture.asset(
+           /* SvgPicture.asset(
               fileInfo.icon!,
               height: 15,
               width: 15,
-            ),
+            ),*/
+            Icon(Icons.lock_outline, color: Colors.lightBlue,),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
-              child: Text(fileInfo.alias!),
+              child: Text(trap.center!),
             ),
           ],
         ),
       ),
-      DataCell(Text(fileInfo.numberOfUses!)),
-      DataCell(Text(fileInfo.name!)),
-      DataCell(Text(fileInfo.state!)),
-      DataCell(Text(fileInfo.lastRevision!)),
+      DataCell(Text(trap.lat.toString()!)),
+      DataCell(Text(trap.centerDescription!)),
+
     ],
   );
 }

@@ -1,14 +1,43 @@
+import 'package:event_bus/event_bus.dart';
+import 'package:get_it/get_it.dart';
 import 'package:yupcity_admin/models/RecentFile.dart';
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:yupcity_admin/models/events/UserSearchEvent.dart';
+import 'package:yupcity_admin/models/user.dart';
 
 import '../../../constants.dart';
 
-class UserTable extends StatelessWidget {
-  const UserTable({
-    Key? key,
-  }) : super(key: key);
+class UserTable extends StatefulWidget {
+  final allUsers;
+
+  UserTable(this.allUsers);
+
+  @override
+  State<UserTable> createState() => _UserTableState();
+
+}
+
+class _UserTableState extends State<UserTable> {
+
+  List<YupcityUser> userList = [];
+  var eventBus = GetIt.I.get<EventBus>();
+
+  @override
+  void initState() {
+    super.initState();
+    userList = widget.allUsers;
+
+    eventBus.on<UserSearchEvent>().listen((event) {
+      if (mounted) {
+        setState(() {
+        userList = event.users;
+        });
+      }
+    });
+
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +58,7 @@ class UserTable extends StatelessWidget {
             width: double.infinity,
             child: DataTable2(
               columnSpacing: defaultPadding,
-              minWidth: 600,
+              minWidth: 800,
               columns: [
                 DataColumn(
                   label: Text("Email"),
@@ -42,8 +71,10 @@ class UserTable extends StatelessWidget {
                 ),*/
               ],
               rows: List.generate(
-                demoRecentFiles.length,
-                (index) => recentFileDataRow(demoRecentFiles[index]),
+                  userList.length,
+                (index) {
+                    return recentFileDataRow(userList[index]);
+                }
               ),
             ),
           ),
@@ -53,25 +84,30 @@ class UserTable extends StatelessWidget {
   }
 }
 
-DataRow recentFileDataRow(RecentFile fileInfo) {
+
+
+
+DataRow recentFileDataRow(YupcityUser user) {
+
   return DataRow(
     cells: [
       DataCell(
         Row(
           children: [
-            SvgPicture.asset(
+           /* SvgPicture.asset(
               fileInfo.icon!,
               height: 15,
               width: 15,
-            ),
+            ),*/
+            Icon(Icons.account_box_rounded, color: Colors.blue,),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
-              child: Text(fileInfo.title!),
+              child: Text(user.email ?? "", overflow: TextOverflow.clip,),
             ),
           ],
         ),
       ),
-      DataCell(Text(fileInfo.date!)),
+      DataCell(Text(user.username ?? "", overflow: TextOverflow.ellipsis,)),
       //DataCell(Text(fileInfo.size!)),
     ],
   );

@@ -1,3 +1,4 @@
+import 'package:yupcity_admin/models/CardInfo.dart';
 import 'package:yupcity_admin/models/MyFiles.dart';
 import 'package:yupcity_admin/models/events/NavigationScreen.dart';
 import 'package:event_bus/event_bus.dart';
@@ -13,7 +14,7 @@ class FileInfoCard extends StatelessWidget {
     required this.info,
   }) : super(key: key);
 
-  final CloudStorageInfo info;
+  final CardInfo info;
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +66,7 @@ class FileInfoCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "${info.numOfFiles} total",
+                  "${info.total} total",
                   style: Theme.of(context)
                       .textTheme
                       .caption!

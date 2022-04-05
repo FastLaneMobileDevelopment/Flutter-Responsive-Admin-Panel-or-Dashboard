@@ -37,7 +37,6 @@ class MyApp extends StatelessWidget {
             .apply(bodyColor: Colors.white),
         canvasColor: secondaryColor,
       ),
-
       home: MultiProvider(
         providers: [
           ChangeNotifierProvider(
@@ -50,7 +49,6 @@ class MyApp extends StatelessWidget {
               if (!snapshot.hasData) {
                 return LoginScreenPage();
               }
-
               if (snapshot.data ?? false)
               {
                 return  LoginScreenPage();
@@ -67,12 +65,9 @@ class MyApp extends StatelessWidget {
 Future setupLocator() async {
   GetIt locator = GetIt.I;
   try {
-
+    locator.registerSingleton<LocalStorageService>( await LocalStorageService.getInstance());
     locator.registerSingleton<EventBus>(EventBus());
     locator.registerSingleton<NavigationService>(NavigationService());
-    var instance = await LocalStorageService.getInstance();
-    locator.registerSingleton<EventBus>(EventBus());
-    locator.registerSingleton<LocalStorageService>(instance);
     locator.registerSingleton<HttpClient>(HttpClient());
 
     return Future.value(true);

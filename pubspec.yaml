@@ -45,7 +45,6 @@ dependencies:
   geolocator: ^8.2.0
   form_builder_validators: ^7.8.0
   flutter_form_bloc: ^0.29.3
-  fluttertoast: ^8.0.8
   url_launcher: ^6.0.17
   rflutter_alert: ^2.0.4
   flutter_bloc: ^8.0.0

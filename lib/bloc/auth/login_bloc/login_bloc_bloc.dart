@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:yupcity_admin/services/application/login_logic.dart';
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
 import 'login_bloc_event.dart';
 import 'login_bloc_state.dart';
 

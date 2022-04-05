@@ -12,50 +12,52 @@ import 'dashboard_bloc_state.dart';
 class DashboardBloc extends Bloc<DashboardBlocEvent, DashboardBlocState> {
   DashboardBloc({@required this.logic}) : super(InitialBoardBlocState()) {
 
-    on<SavePoiDataEvent>((event, emit) async {
-
+    on<GetAllDataEvent>((event, emit) async{
+      await getAllDataEventHandler(emit, event);
     });
 
-
-    on<GetPoiDataEvent>((event, emit) async {
-      await getPoiEventHandler(emit, event);
+    on<SetPoiEvent>((event, emit) async{
+      await setPoiEventHandler(emit, event);
     });
+
   }
 
-  Future<void> savePoiEventHandler(Emitter<DashboardBlocState> emit, SavePoiDataEvent event) async {
-    emit(UpdatingUserBlocState());
-    try{
+  final DashboardLogic? logic;
 
-      var yupcityTraPoi = YupcityTrapPoi(center: event.center, centerDescription: event.centerDescription, lat: event.latitude, lon : event.longuitude);
-      await logic?.setPoi(yupcityTraPoi);
-      var responseData =  await logic?.getPois();
-      emit(PoiDataBlocState(responseData!));
+  Future<void> setPoiEventHandler(Emitter<DashboardBlocState> emit, SetPoiEvent event) async {
+
+    try{
+      var responseSetPoi =  await logic?.setPoi(event.newTrap);
+        emit(SepPoiBoardBlocState());
+        debugPrint(responseSetPoi.toString());
+         // UpdatedBoardBlocState
     }on Exception{
-      emit(const ErrorUpdatingUserBlocState("Error Get Username"));
+      emit(const ErrorBoardBlocState("Error updating new trap"));
+    }
+  }
+
+  Future<void> getAllDataEventHandler(Emitter<DashboardBlocState> emit, GetAllDataEvent event) async {
+    emit(LoadingBoardBlocState());
+
+    try{
+      var responseTraps =  await logic?.getPois();
+      var responseUsers = await logic?.getUsers();
+      var responseRegistries = await logic?.getRegistries();
+      emit(UpdatedBoardBlocState(responseUsers ?? [],responseTraps ?? [], responseRegistries ?? [],));
+      // UpdatedBoardBlocState
+    }on Exception{
+      emit(const ErrorBoardBlocState("Error Get Users and Traps"));
     }
   }
 
 
-  Future<void> getPoiEventHandler(Emitter<DashboardBlocState> emit, GetPoiDataEvent event) async {
-    emit(UpdatingUserBlocState());
-    try{
-      var responseData =  await logic?.getPois();
-      emit(PoiDataBlocState(responseData!));
-    }on Exception{
-      emit(const ErrorUpdatingUserBlocState("Error Get Username"));
-    }
-  }
 
 
 
 
 
 
-
-
-
-
- /* Future<void> updatedUserPhotoDataEventHandler(UpdateUserPhotoDataEvent event, Emitter<DashboardBlocState> emit) async {
+  /* Future<void> updatedUserPhotoDataEventHandler(UpdateUserPhotoDataEvent event, Emitter<DashboardBlocState> emit) async {
     var id = GetIt.I.get<LocalStorageService>().getUser()?.sId;
     var file =  await ImagePicker().pickImage(source: event.imageSource, maxWidth: 1024, maxHeight: 1024, imageQuality: 70);
     emit(UpdatingUserBlocState());
@@ -63,6 +65,6 @@ class DashboardBloc extends Bloc<DashboardBlocEvent, DashboardBlocState> {
     emit(UpdatedUserBlocState(responseData!));
   } */
 
-  final DashboardLogic? logic;
+
 
 }

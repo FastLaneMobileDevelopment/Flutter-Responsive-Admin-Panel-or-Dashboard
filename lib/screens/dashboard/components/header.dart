@@ -1,4 +1,8 @@
+import 'package:event_bus/event_bus.dart';
+import 'package:get_it/get_it.dart';
 import 'package:yupcity_admin/controllers/MenuController.dart';
+import 'package:yupcity_admin/models/events/UserSearchEvent.dart';
+import 'package:yupcity_admin/models/user.dart';
 import 'package:yupcity_admin/responsive.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -10,9 +14,11 @@ class Header extends StatelessWidget {
   const Header({
     Key? key,
     required this.route,
+    required this.itemList,
   }) : super(key: key);
 
   final String route;
+  final List itemList;
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +38,7 @@ class Header extends StatelessWidget {
           Spacer(flex: Responsive.isDesktop(context) ? 2 : 1),
         if(route == "users")
         Expanded(child:
-         SearchField(route: route,)),
+         SearchField(route: route,items: itemList,)),
         //ProfileCard()
       ],
     );
@@ -77,18 +83,21 @@ class ProfileCard extends StatelessWidget {
 }
 
 class SearchField extends StatelessWidget {
-  const SearchField({
+   SearchField({
     Key? key,
 
     required this.route,
+    required this.items
   }) : super(key: key);
 
   final route;
+  List items;
 
   @override
   Widget build(BuildContext context) {
 
     return TextField(
+      onChanged:(value) => _search(route, items, value),
       decoration: InputDecoration(
         hintText: "Search",
         fillColor: secondaryColor,
@@ -98,7 +107,9 @@ class SearchField extends StatelessWidget {
           borderRadius: const BorderRadius.all(Radius.circular(10)),
         ),
         suffixIcon: InkWell(
-          onTap: () {},
+          onTap: () {
+            debugPrint("search");
+          },
           child: Container(
             padding: EdgeInsets.all(defaultPadding * 0.75),
             margin: EdgeInsets.symmetric(horizontal: defaultPadding / 2),
@@ -112,4 +123,29 @@ class SearchField extends StatelessWidget {
       ),
     );
   }
+   _search(String route, List items, String value) {
+     var eventBus = GetIt.I.get<EventBus>();
+     List<YupcityUser> searchUsers = [];
+     List<YupcityUser> list = [];
+
+
+     //Search User
+     if (route == "users") {
+       for (var user in items) {
+         if(user.email != null){
+           if (user.email.startsWith(value)) {
+             searchUsers.add(user);
+           }
+         }
+
+
+         eventBus.fire(UserSearchEvent(users: searchUsers));
+       }
+
+       //Search Traps
+       if (route == "traps") {
+         //TODO if is neccesary add trap search
+       }
+     }
+   }
 }

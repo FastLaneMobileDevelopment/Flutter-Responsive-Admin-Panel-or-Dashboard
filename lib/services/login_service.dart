@@ -11,13 +11,13 @@ class LoginService {
     storageService.setRememberMe(false);
     storageService.setCurrentEmail("");
     storageService.setCurrentPassword("");
+    storageService.setToken("");
     return Future.value(true);
   }
 
   static Future<bool> CheckLogin() async {
     var storageService = GetIt.I.get<LocalStorageService>();
-    var uuid = storageService.getUser()?.sId ?? "";
-    return Future.value(uuid.isEmpty);
+    return Future.value(storageService.getToken().isEmpty);
   }
 
 }

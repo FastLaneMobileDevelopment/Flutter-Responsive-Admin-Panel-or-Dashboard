@@ -1,12 +1,10 @@
 import 'package:yupcity_admin/bloc/auth/login_bloc/login_fields_form_bloc.dart';
-import 'package:yupcity_admin/models/user.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_bloc/flutter_form_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get_it/get_it.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:yupcity_admin/screens/main/main_screen.dart';
 import 'package:yupcity_admin/services/navigator_service.dart';
 
 class LoginScreenPage extends StatefulWidget {
@@ -52,7 +50,7 @@ class _LoginScreenPageState extends State<LoginScreenPage> {
         return
            Scaffold(
               // backgroundColor: Colors.black,
-              backgroundColor: const Color(0xFFF1F5F8),
+              backgroundColor: const Color(0xFF212332),
               body: FormBlocListener<LoginFieldsFormBloc, String, String>(
                 onSubmitting: (context, state) {
                   var email = formBloc.textEmail.value;
@@ -64,17 +62,21 @@ class _LoginScreenPageState extends State<LoginScreenPage> {
                     GetIt.I.get<NavigationService>().navigateToWithParams(
                         NavigationService.dashBoardPage,
                         state.successResponse);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) =>  MainScreen()),
+                    );
                   }
 
                   //LoadingDialog.hide(context);
                 },
                 onFailure: (context, state) {
-                  Fluttertoast.showToast(
+               /*   Fluttertoast.showToast(
                       msg: state.failureResponse!,
                       toastLength: Toast.LENGTH_SHORT,
                       gravity: ToastGravity.CENTER,
                       timeInSecForIosWeb: 1
-                  );
+                  );*/
                 },
                 child: Stack(
                   children: [
@@ -90,22 +92,21 @@ class _LoginScreenPageState extends State<LoginScreenPage> {
                               vertical: 20.0, horizontal: 40.0),
                           child: Column(
                             children: [
-
                               Container(
                                 width: 300,
                                 height: 100,
                                 child: Image.asset(
-                                  "assets/svg/yupcharge_logo.png",
+                                  "assets/images/yupcharge_logo.png", color: Colors.white,
                                 ),
                               ),
                               const SizedBox(
-                                height: 20,
+                                height: 30,
                               ),
                               Container(
                                 width: 300,
                                 height: 200,
                                 child: Image.asset(
-                                  "assets/svg/trap.png",
+                                  "assets/images/trap.png",
                                 ),
                               ),
                               /*Text(I18n.of(context).login_title,
@@ -121,8 +122,8 @@ class _LoginScreenPageState extends State<LoginScreenPage> {
                               TextFieldBlocBuilder(
                                 textFieldBloc: formBloc.textEmail,
                                 decoration: InputDecoration(
-                                  focusColor: Colors.white,
-                                  hoverColor: Colors.white,
+                                  focusColor: Color(0xFF2A2D3E),
+                                  hoverColor: Color(0xFF2A2D3E),
                                   border: OutlineInputBorder(
 
                                     borderRadius: BorderRadius.circular(10.0),
@@ -134,7 +135,8 @@ class _LoginScreenPageState extends State<LoginScreenPage> {
                                   filled: true,
                                   contentPadding: const EdgeInsets.all(16),
                                   labelText: "Email",
-                                  fillColor: Colors.white,
+
+                                  fillColor: Color(0xFF2A2D3E),
                                 ),
                               ),
                               TextFieldBlocBuilder(
@@ -153,7 +155,7 @@ class _LoginScreenPageState extends State<LoginScreenPage> {
                                   ),
                                   contentPadding: const EdgeInsets.all(16),
                                   labelText: "Password",
-                                  fillColor: Colors.white,
+                                  fillColor: Color(0xFF2A2D3E),
                                   filled: true,
                                   suffixIcon: IconButton(
                                     icon: Icon(
@@ -182,7 +184,7 @@ class _LoginScreenPageState extends State<LoginScreenPage> {
                                   child: Text("Iniciar")), */
                               ElevatedButton(
                                 onPressed: () {
-                                  //GetIt.I.get<NavigationService>().navigateTo("datsmi_dashboarPage");
+                                  //GetIt.I.get<NavigationService>().navigateTo("datsmi_dash boarPage");
                                   formBloc.submit();
                                 },
                                 style: ButtonStyle(

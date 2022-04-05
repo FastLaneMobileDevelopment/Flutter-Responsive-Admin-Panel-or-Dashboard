@@ -6,6 +6,10 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:yupcity_admin/bloc/dashboard/dashboard_bloc.dart';
+import 'package:yupcity_admin/bloc/dashboard/dashboard_bloc_event.dart';
+import 'package:yupcity_admin/models/yupcity_trap_poi.dart';
+import 'package:yupcity_admin/services/application/dashboard_logic.dart';
 
 
 class AddNewTrapScreen extends StatefulWidget {
@@ -114,8 +118,8 @@ class AddNewTrapScreenState extends State<AddNewTrapScreen> {
                               labelText:
                               'Nombre del Trap (Alias)',
                             ),
-
                             onChanged: (value){
+                                nameTrap = value ?? "";
                             },
                             validator: FormBuilderValidators.compose([
                               FormBuilderValidators.required(context, errorText: "El alias es requerido"),
@@ -124,7 +128,6 @@ class AddNewTrapScreenState extends State<AddNewTrapScreen> {
                             keyboardType: TextInputType.name,
                       ),
                             FormBuilderTextField(
-
                               autovalidateMode: AutovalidateMode.onUserInteraction,
                               name: 'description',
                               decoration: InputDecoration(
@@ -134,12 +137,10 @@ class AddNewTrapScreenState extends State<AddNewTrapScreen> {
                               onChanged: (value){
                                     descriptionTrap = value ?? "";
                               },
-
                               // valueTransformer: (text) => num.tryParse(text),
                               validator: FormBuilderValidators.compose([
                                 FormBuilderValidators.required(context,errorText: "La descripsión es requerida"),
                                 FormBuilderValidators.max(context, 70, errorText: "Max 70 caracteres"),
-
                               ]),
                               keyboardType: TextInputType.name,
                             ),
@@ -153,19 +154,15 @@ class AddNewTrapScreenState extends State<AddNewTrapScreen> {
                       ElevatedButton(
                         child: Text('Submit'),
                         onPressed: ()  {
-
                           _formKey.currentState?.save() ;
                           if (_formKey.currentState?.validate() ?? false) {
                             print(_formKey.currentState?.value);
+                            _onSummited(selectedPosition, nameTrap, descriptionTrap);
                           } else {
                             print("validation failed");
                           }
-
                          // debugPrint("Name " + _formKey.currentState?.value["name"] + "Description " + _formKey.currentState?.value["description"] + "position " + selectedPosition.toString() );
                             // Either invalidate using Form Key
-
-
-
                         },
                       ),
                       SizedBox(
@@ -181,6 +178,17 @@ class AddNewTrapScreenState extends State<AddNewTrapScreen> {
       ],
     );
 
+  }
+
+  void _onSummited(LatLng selectedPosition, String center, String centerDescription){
+    var _dashboardBloc = DashboardBloc(logic: YupcityDashboardLogic());
+    var newTrap =  YupcityTrapPoi(
+      center: center,
+      centerDescription: centerDescription,
+      lat: selectedPosition.latitude,
+      lon: selectedPosition.longitude,
+    );
+    _dashboardBloc.add(SetPoiEvent(newTrap));
   }
 
 
@@ -261,7 +269,7 @@ class AddNewTrapScreenState extends State<AddNewTrapScreen> {
                 decoration: BoxDecoration(
                   color: Color(0xFF212332),
                 ),
-                child: Text("Press in the map for add a new Trap", style: TextStyle(color: Colors.white, fontSize: 14),)
+                child: Text("Mantén presionado para nuevo trap",overflow: TextOverflow.visible, style: TextStyle(color: Colors.white, fontSize: 14),)
             ),
 
             backgroundColor: Color(0xFF212332),

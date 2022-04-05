@@ -1,3 +1,5 @@
+import 'package:yupcity_admin/models/user.dart';
+import 'package:yupcity_admin/models/yupcity_trap_poi.dart';
 import 'package:yupcity_admin/responsive.dart';
 import 'package:yupcity_admin/screens/dashboard/add_new_trap.dart';
 import 'package:yupcity_admin/screens/dashboard/components/devices_table.dart';
@@ -13,6 +15,11 @@ import 'package:yupcity_admin/screens/dashboard/components/storage_details.dart'
 import 'dashboard/components/user_table.dart';
 
 class DevicesScreen extends StatelessWidget {
+  final List<YupcityUser> allUser;
+  final List<YupcityTrapPoi> allTraps;
+
+  DevicesScreen(this.allUser, this.allTraps);
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -20,12 +27,12 @@ class DevicesScreen extends StatelessWidget {
         padding: EdgeInsets.all(defaultPadding),
         child: Column(
           children: [
-            Header(route: "devices",),
+            Header(route: "devices", itemList: allTraps,),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "Devices",
+                  "Devices" ,
                   style: Theme.of(context).textTheme.subtitle1,
                 ),
                 ElevatedButton.icon(
@@ -57,7 +64,7 @@ class DevicesScreen extends StatelessWidget {
                     children: [
                      // MyFiles(),
                       SizedBox(height: defaultPadding),
-                      DevicesTable(),
+                      DevicesTable(allUser,allTraps),
 
 
                     ],

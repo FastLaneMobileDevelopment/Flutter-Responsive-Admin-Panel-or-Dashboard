@@ -2,7 +2,6 @@ import 'package:yupcity_admin/bloc/auth/register_bloc/register_fields_form_bloc.
 import 'package:yupcity_admin/services/navigator_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bloc/flutter_form_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get_it/get_it.dart';
 
 class RegisterScreenPage extends StatefulWidget {
@@ -51,12 +50,12 @@ class _RegisterScreenPageState extends State<RegisterScreenPage> {
               onFailure: (context, state) {
                 debugPrint(state.failureResponse);
                 // LoadingDialog.hide(context);
-                Fluttertoast.showToast(
+              /*  Fluttertoast.showToast(
                     msg: state.failureResponse!,
                     toastLength: Toast.LENGTH_SHORT,
                     gravity: ToastGravity.CENTER,
                     timeInSecForIosWeb: 1
-                );
+                );*/
               },
               child: SingleChildScrollView(
                 physics: const ClampingScrollPhysics(),

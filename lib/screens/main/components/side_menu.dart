@@ -3,6 +3,8 @@ import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get_it/get_it.dart';
+import 'package:yupcity_admin/screens/login_page.dart';
+import 'package:yupcity_admin/services/login_service.dart';
 
 
 class SideMenu extends StatelessWidget {
@@ -16,11 +18,11 @@ class SideMenu extends StatelessWidget {
       child: ListView(
         children: [
           DrawerHeader(
-            child: Image.asset("assets/images/logo.png"),
+            child: Image.asset("assets/images/yupcharge_logo.png", color: Colors.white38,),
           ),
           DrawerListTile(
             title: "Dashboard",
-            svgSrc: "assets/images/logo-vertical.svg",
+            svgSrc: "assets/icons/menu_dashbord.svg",
             press: () {
               String route = "dashboard";
               GetIt.I.get<EventBus>().fire(NavigationScreen(routeName: route));
@@ -40,6 +42,18 @@ class SideMenu extends StatelessWidget {
             press: () {
               String route = "devices";
               GetIt.I.get<EventBus>().fire(NavigationScreen(routeName: route));
+            },
+          ),
+          DrawerListTile(
+            title: "Log out",
+            svgSrc: "assets/icons/menu_store.svg",
+            press: () {
+              String route = "devices";
+              LoginService.RemoveLogin();
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) =>  LoginScreenPage()),
+              );
             },
           ),
 
