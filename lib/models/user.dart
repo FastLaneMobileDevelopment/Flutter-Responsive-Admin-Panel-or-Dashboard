@@ -5,6 +5,7 @@ class YupcityUser {
   String? telephone;
   String? password;
   int? iV;
+  late int numberOfUses;
 
   YupcityUser(
       {this.sId,
@@ -12,7 +13,9 @@ class YupcityUser {
         this.email,
         this.telephone,
         this.password,
-        this.iV});
+        this.iV,
+        this.numberOfUses = 00,
+      });
 
   YupcityUser.fromJson(Map<String, dynamic> json) {
     sId = json['_id'];
@@ -21,6 +24,7 @@ class YupcityUser {
     telephone = json['telephone'];
     password = json['password'];
     iV = json['__v'];
+    numberOfUses = 00;
   }
 
   Map<String, dynamic> toJson() {
@@ -31,6 +35,7 @@ class YupcityUser {
     data['telephone'] = this.telephone;
     data['password'] = this.password;
     data['__v'] = this.iV;
+    data["numberOfUses"] = this.numberOfUses;
     return data;
   }
 }

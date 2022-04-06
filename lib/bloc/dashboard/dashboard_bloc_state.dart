@@ -41,3 +41,12 @@ class SepPoiBoardBlocState extends DashboardBlocState {
   List<Object> get props => [];
 }
 
+class RefreshAllDataState extends DashboardBlocState {
+  final List<YupcityUser> allUsers;
+  final List<YupcityTrapPoi> allTraps;
+  final List<YupcityRegister> registries;
+
+  const RefreshAllDataState(this.allUsers, this.allTraps, this.registries);
+  @override
+  List<Object> get props => [];
+}

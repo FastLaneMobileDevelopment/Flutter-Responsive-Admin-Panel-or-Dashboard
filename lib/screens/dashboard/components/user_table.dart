@@ -6,13 +6,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:yupcity_admin/models/events/UserSearchEvent.dart';
 import 'package:yupcity_admin/models/user.dart';
+import 'package:yupcity_admin/models/yupcity_register.dart';
 
 import '../../../constants.dart';
 
 class UserTable extends StatefulWidget {
   final allUsers;
 
-  UserTable(this.allUsers);
+  final allRegistries;
+
+  UserTable(this.allUsers, this.allRegistries);
 
   @override
   State<UserTable> createState() => _UserTableState();
@@ -22,13 +25,15 @@ class UserTable extends StatefulWidget {
 class _UserTableState extends State<UserTable> {
 
   List<YupcityUser> userList = [];
+  List<YupcityRegister> allRegistries = [];
   var eventBus = GetIt.I.get<EventBus>();
 
   @override
   void initState() {
     super.initState();
     userList = widget.allUsers;
-
+    allRegistries = widget.allRegistries;
+    userList = _getRegistriesForUsers(userList, allRegistries);
     eventBus.on<UserSearchEvent>().listen((event) {
       if (mounted) {
         setState(() {
@@ -37,6 +42,17 @@ class _UserTableState extends State<UserTable> {
       }
     });
 
+  }
+
+  List<YupcityUser> _getRegistriesForUsers(List<YupcityUser> userList,List<YupcityRegister> registerList){
+    for(var registry in registerList){
+      for(var user in userList){
+        if(registry.userId == user.sId){
+          user.numberOfUses++;
+        }
+      }
+    }
+    return userList;
   }
 
   @override
@@ -58,17 +74,20 @@ class _UserTableState extends State<UserTable> {
             width: double.infinity,
             child: DataTable2(
               columnSpacing: defaultPadding,
-              minWidth: 800,
+              minWidth: 1000,
               columns: [
-                DataColumn(
+                DataColumn2(
+                  size: ColumnSize.L,
                   label: Text("Email"),
                 ),
-                DataColumn(
+                DataColumn2(
+                  size: ColumnSize.S,
                   label: Text("Usos total"),
                 ),
-                /*DataColumn(
-                  label: Text("Size"),
-                ),*/
+                DataColumn2(
+                  size: ColumnSize.M,
+                  label: Text("Nombre"),
+                ),
               ],
               rows: List.generate(
                   userList.length,
@@ -102,13 +121,13 @@ DataRow recentFileDataRow(YupcityUser user) {
             Icon(Icons.account_box_rounded, color: Colors.blue,),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
-              child: Text(user.email ?? "", overflow: TextOverflow.clip,),
+              child: Text(user.email ?? "", overflow: TextOverflow.ellipsis,),
             ),
           ],
         ),
       ),
+      DataCell(Text(user.numberOfUses.toString() ?? "0", overflow: TextOverflow.ellipsis,)),
       DataCell(Text(user.username ?? "", overflow: TextOverflow.ellipsis,)),
-      //DataCell(Text(fileInfo.size!)),
     ],
   );
 }

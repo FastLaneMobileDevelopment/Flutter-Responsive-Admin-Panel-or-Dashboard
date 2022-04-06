@@ -65,8 +65,6 @@ class DevicesScreen extends StatelessWidget {
                      // MyFiles(),
                       SizedBox(height: defaultPadding),
                       DevicesTable(allUser,allTraps),
-
-
                     ],
                   ),
                 ),

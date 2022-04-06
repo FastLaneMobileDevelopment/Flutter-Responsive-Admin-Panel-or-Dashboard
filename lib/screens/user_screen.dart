@@ -1,4 +1,6 @@
 
+import 'package:yupcity_admin/models/yupcity_register.dart';
+
 import '../../constants.dart';
 
 import 'package:yupcity_admin/models/user.dart';
@@ -10,8 +12,9 @@ import 'dashboard/components/user_table.dart';
 class UserScreen extends StatelessWidget {
   final List<YupcityUser> allUser;
   final List<YupcityTrapPoi> allTraps;
+  final List<YupcityRegister> allRegistries;
 
-  UserScreen(this.allUser, this.allTraps);
+  UserScreen(this.allUser, this.allTraps, this.allRegistries);
 
 
   @override
@@ -32,7 +35,7 @@ class UserScreen extends StatelessWidget {
                     children: [
                      // MyFiles(),
                       SizedBox(height: defaultPadding),
-                      UserTable(allUser),
+                      UserTable(allUser, allRegistries),
                     ],
                   ),
                 ),

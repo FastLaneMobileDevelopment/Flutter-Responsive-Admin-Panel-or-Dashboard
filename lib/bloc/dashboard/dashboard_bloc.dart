@@ -20,6 +20,9 @@ class DashboardBloc extends Bloc<DashboardBlocEvent, DashboardBlocState> {
       await setPoiEventHandler(emit, event);
     });
 
+    on<RefreshAllDataEvent>((event, emit) async{
+      await refreshAllDataEvent(emit, event);
+    });
   }
 
   final DashboardLogic? logic;
@@ -44,6 +47,20 @@ class DashboardBloc extends Bloc<DashboardBlocEvent, DashboardBlocState> {
       var responseUsers = await logic?.getUsers();
       var responseRegistries = await logic?.getRegistries();
       emit(UpdatedBoardBlocState(responseUsers ?? [],responseTraps ?? [], responseRegistries ?? [],));
+      // UpdatedBoardBlocState
+    }on Exception{
+      emit(const ErrorBoardBlocState("Error Get Users and Traps"));
+    }
+  }
+
+  Future<void> refreshAllDataEvent(Emitter<DashboardBlocState> emit, RefreshAllDataEvent event) async {
+    emit(LoadingBoardBlocState());
+
+    try{
+      var responseTraps =  await logic?.getPois();
+      var responseUsers = await logic?.getUsers();
+      var responseRegistries = await logic?.getRegistries();
+      emit(RefreshAllDataState(responseUsers ?? [],responseTraps ?? [], responseRegistries ?? [],));
       // UpdatedBoardBlocState
     }on Exception{
       emit(const ErrorBoardBlocState("Error Get Users and Traps"));

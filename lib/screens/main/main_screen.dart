@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 import 'package:yupcity_admin/bloc/dashboard/dashboard_bloc.dart';
 import 'package:yupcity_admin/bloc/dashboard/dashboard_bloc_event.dart';
 import 'package:yupcity_admin/bloc/dashboard/dashboard_bloc_state.dart';
@@ -35,7 +36,6 @@ class _MainScreenState extends State<MainScreen> {
   @override
   void initState() {
     super.initState();
-
     _registerEvents();
     _dashboardBloc.add(GetAllDataEvent());
   }
@@ -56,7 +56,7 @@ class _MainScreenState extends State<MainScreen> {
         case "dashboard":
           return DashboardScreen(usersList, trapsList, registerList);
         case "users":
-          return UserScreen(usersList, trapsList);
+          return UserScreen(usersList, trapsList, registerList);
         case "devices":
           return DevicesScreen(usersList, trapsList);
       }
@@ -68,57 +68,71 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => _dashboardBloc,
-      child: BlocListener<DashboardBloc, DashboardBlocState>(
-        listener: (context, state) {
-          debugPrint("Updated state: " + state.toString());
-          if(state is LoadingBoardBlocState){
-            if(mounted){
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (context) => MenuController(),
+        ),
+      ],
+      child: BlocProvider(
+        create: (context) => _dashboardBloc,
+        child: BlocListener<DashboardBloc, DashboardBlocState>(
+          listener: (context, state) {
+            debugPrint("Updated state: " + state.toString());
+            if(state is LoadingBoardBlocState){
+              if(mounted){
+                setState(() {
+                  isLoading = true;
+                });
+              }
+            }else if(state is UpdatedBoardBlocState){
               setState(() {
-                isLoading = true;
+                isLoading = false;
+                usersList = state.allUsers ?? [];
+                trapsList = state.allTraps ?? [];
+                registerList = state.registries ?? [];
+              });
+            }else if( state is SepPoiBoardBlocState){
+              _dashboardBloc.add(RefreshAllDataEvent());
+            }else if (state is RefreshAllDataState){
+              setState(() {
+                isLoading = false;
+                usersList = state.allUsers ?? [];
+                trapsList = state.allTraps ?? [];
+                registerList = state.registries ?? [];
               });
             }
-          }else if(state is UpdatedBoardBlocState){
-            setState(() {
-              isLoading = false;
-              usersList = state.allUsers ?? [];
-              trapsList = state.allTraps ?? [];
-              registerList = state.registries ?? [];
-            });
-          }else if( state is SepPoiBoardBlocState){
-            _dashboardBloc.add(GetAllDataEvent());
-          }
-        },
-        bloc: _dashboardBloc,
-        child: BlocBuilder<DashboardBloc, DashboardBlocState>(
-          builder: (context, state) {
-            return Scaffold(
-              key: context
-                  .read<MenuController>()
-                  .scaffoldKey,
-              drawer: SideMenu(),
-              body: SafeArea(
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // We want this side menu only for large screen
-                    if (Responsive.isDesktop(context))
-                      Expanded(
-                        // default flex = 1
-                        // and it takes 1/6 part of the screen
-                        child: SideMenu(),
-                      ),
-                    Expanded(
-                      // It takes 5/6 part of the screen
-                      flex: 5,
-                      child: createScreen(currentScreen),
-                    ),
-                  ],
-                ),
-              ),
-            );
           },
+          bloc: _dashboardBloc,
+          child: BlocBuilder<DashboardBloc, DashboardBlocState>(
+            builder: (context, state) {
+              return Scaffold(
+                key: context
+                    .read<MenuController>()
+                    .scaffoldKey,
+                drawer: SideMenu(),
+                body: SafeArea(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // We want this side menu only for large screen
+                      if (Responsive.isDesktop(context))
+                        Expanded(
+                          // default flex = 1
+                          // and it takes 1/6 part of the screen
+                          child: SideMenu(),
+                        ),
+                      Expanded(
+                        // It takes 5/6 part of the screen
+                        flex: 5,
+                        child: createScreen(currentScreen),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
         ),
       ),
     );

@@ -43,6 +43,14 @@ class SetPoiEvent extends DashboardBlocEvent{
 List<Object> get props => [];
 
 }
+class RefreshAllDataEvent extends DashboardBlocEvent{
+
+  const RefreshAllDataEvent();
+  @override
+  List<Object> get props => [];
+
+}
+
 
 
 

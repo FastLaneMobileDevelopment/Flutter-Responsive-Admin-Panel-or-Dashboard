@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get_it/get_it.dart';
 import 'package:yupcity_admin/screens/login_page.dart';
+import 'package:yupcity_admin/screens/main/main_screen.dart';
 import 'package:yupcity_admin/services/login_service.dart';
 
 
@@ -15,10 +16,11 @@ class SideMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
+      backgroundColor: Colors.black,
       child: ListView(
         children: [
           DrawerHeader(
-            child: Image.asset("assets/images/yupcharge_logo.png", color: Colors.white38,),
+            child: Image.asset("assets/images/yupcharge_logo.png", color: Colors.white70,),
           ),
           DrawerListTile(
             title: "Dashboard",
@@ -54,6 +56,7 @@ class SideMenu extends StatelessWidget {
                 context,
                 MaterialPageRoute(builder: (context) =>  LoginScreenPage()),
               );
+
             },
           ),
 
