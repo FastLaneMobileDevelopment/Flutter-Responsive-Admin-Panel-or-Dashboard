@@ -58,7 +58,7 @@ class _MainScreenState extends State<MainScreen> {
         case "users":
           return UserScreen(usersList, trapsList, registerList);
         case "devices":
-          return DevicesScreen(usersList, trapsList);
+          return DevicesScreen(registerList, trapsList);
       }
     }else{
       return Center(child: CircularProgressIndicator());
@@ -78,7 +78,7 @@ class _MainScreenState extends State<MainScreen> {
         create: (context) => _dashboardBloc,
         child: BlocListener<DashboardBloc, DashboardBlocState>(
           listener: (context, state) {
-            debugPrint("Updated state: " + state.toString());
+
             if(state is LoadingBoardBlocState){
               if(mounted){
                 setState(() {

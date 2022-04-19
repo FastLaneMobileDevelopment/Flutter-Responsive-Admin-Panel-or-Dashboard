@@ -1,24 +1,20 @@
-import 'package:yupcity_admin/models/user.dart';
+import 'package:yupcity_admin/i18n.dart';
+import 'package:yupcity_admin/models/yupcity_register.dart';
 import 'package:yupcity_admin/models/yupcity_trap_poi.dart';
 import 'package:yupcity_admin/responsive.dart';
 import 'package:yupcity_admin/screens/dashboard/add_new_trap.dart';
 import 'package:yupcity_admin/screens/dashboard/components/devices_table.dart';
-import 'package:yupcity_admin/screens/dashboard/components/my_fields.dart';
 import 'package:flutter/material.dart';
 
 import '../../constants.dart';
 import 'package:yupcity_admin/screens/dashboard/components/header.dart';
 
-import 'package:yupcity_admin/screens/dashboard/components/recent_files.dart';
-import 'package:yupcity_admin/screens/dashboard/components/storage_details.dart';
-
-import 'dashboard/components/user_table.dart';
 
 class DevicesScreen extends StatelessWidget {
-  final List<YupcityUser> allUser;
+  final List<YupcityRegister> allRegistries;
   final List<YupcityTrapPoi> allTraps;
 
-  DevicesScreen(this.allUser, this.allTraps);
+  DevicesScreen(this.allRegistries, this.allTraps);
 
   @override
   Widget build(BuildContext context) {
@@ -31,9 +27,12 @@ class DevicesScreen extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  "Devices" ,
+               /* Text(
+                  "Devices",
                   style: Theme.of(context).textTheme.subtitle1,
+                ),*/
+                SizedBox(
+                  width: 15,
                 ),
                 ElevatedButton.icon(
                   style: TextButton.styleFrom(
@@ -50,7 +49,7 @@ class DevicesScreen extends StatelessWidget {
                     );
                   },
                   icon: Icon(Icons.add),
-                  label: Text("Add New"),
+                  label: Text(I18n.of(context).add_new),
                 ),
               ],
             ),
@@ -64,7 +63,7 @@ class DevicesScreen extends StatelessWidget {
                     children: [
                      // MyFiles(),
                       SizedBox(height: defaultPadding),
-                      DevicesTable(allUser,allTraps),
+                      DevicesTable(allRegistries,allTraps),
                     ],
                   ),
                 ),

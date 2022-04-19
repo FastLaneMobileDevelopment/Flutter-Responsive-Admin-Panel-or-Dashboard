@@ -1,9 +1,8 @@
 import 'package:event_bus/event_bus.dart';
 import 'package:get_it/get_it.dart';
-import 'package:yupcity_admin/models/RecentFile.dart';
+import 'package:yupcity_admin/i18n.dart';
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:yupcity_admin/models/events/UserSearchEvent.dart';
 import 'package:yupcity_admin/models/user.dart';
 import 'package:yupcity_admin/models/yupcity_register.dart';
@@ -67,7 +66,7 @@ class _UserTableState extends State<UserTable> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "Usuarios",
+          I18n.of(context).users,
             style: Theme.of(context).textTheme.subtitle1,
           ),
           SizedBox(
@@ -82,11 +81,11 @@ class _UserTableState extends State<UserTable> {
                 ),
                 DataColumn2(
                   size: ColumnSize.S,
-                  label: Text("Usos total"),
+                  label: Text(I18n.of(context).uses_total),
                 ),
                 DataColumn2(
                   size: ColumnSize.M,
-                  label: Text("Nombre"),
+                  label: Text(I18n.of(context).name),
                 ),
               ],
               rows: List.generate(

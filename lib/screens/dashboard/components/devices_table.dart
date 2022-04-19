@@ -1,59 +1,106 @@
-import 'package:yupcity_admin/models/Device.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:yupcity_admin/bloc/devices/devices_bloc.dart';
+import 'package:yupcity_admin/bloc/devices/devices_bloc_event.dart';
+import 'package:yupcity_admin/bloc/devices/devices_bloc_state.dart';
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:yupcity_admin/models/user.dart';
+import 'package:yupcity_admin/i18n.dart';
+import 'package:yupcity_admin/models/yupcity_register.dart';
 import 'package:yupcity_admin/models/yupcity_trap_poi.dart';
+import 'package:yupcity_admin/services/application/devices_logic.dart';
 
 import '../../../constants.dart';
 
-class DevicesTable extends StatelessWidget {
+class DevicesTable extends StatefulWidget {
 
 
-  final List<YupcityUser> allUser;
+  final List<YupcityRegister> allRegistries;
   final List<YupcityTrapPoi> allTraps;
 
-  DevicesTable(this.allUser, this.allTraps);
+  DevicesTable(this.allRegistries, this.allTraps);
+
+  @override
+  State<DevicesTable> createState() => _DevicesTableState();
+}
+
+class _DevicesTableState extends State<DevicesTable> {
+
+  var _devicesBloc = DevicesBloc(logic: YupcityDevicesLogic());
+  List<YupcityTrapPoi> trapsList = [];
+  bool isLoading = true;
+  @override
+  void initState() {
+    super.initState();
+    _devicesBloc.add(GetTrapsWithRegistriesEvent(widget.allTraps, widget.allRegistries));
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(defaultPadding),
-      decoration: BoxDecoration(
-        color: secondaryColor,
-        borderRadius: const BorderRadius.all(Radius.circular(10)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            "Traps",
-            style: Theme.of(context).textTheme.subtitle1,
-          ),
-          SizedBox(
-            width: double.infinity,
-            child: DataTable2(
-              columnSpacing: defaultPadding,
-              minWidth: 1600,
-              columns: [
-                DataColumn(
-                  label: Text("Nombre / Lugar"),
-                ),
-                DataColumn(
-                  label: Text("Nº de usos"),
-                ),
-                DataColumn(
-                  label: Text("Descripción"),
-                ),
+    return BlocProvider(
+      create: (context) => _devicesBloc,
+      child: BlocListener<DevicesBloc, DevicesBlocState>(
+        listener: (context, state) {
+          if(state is LoadingTrapsBlocState){
+            if(mounted){
+              setState(() {
+                isLoading = true;
+              });
+            }
+          }else if(state is UpdatedDataTrapsBlocState){
+            setState(() {
+              isLoading = false;
+              trapsList = state.allTraps ?? [];
+            });
+          }else if( state is ErrorTrapBlocState){
 
-              ],
-              rows: List.generate(
-                allTraps.length,
-                (index) => devicesDataRow(allTraps[index]),
+          }
+        },
+        child: BlocBuilder<DevicesBloc, DevicesBlocState>(
+          builder: (context, state) {
+            return Container(
+              padding: EdgeInsets.all(defaultPadding),
+              decoration: BoxDecoration(
+                color: secondaryColor,
+                borderRadius: const BorderRadius.all(Radius.circular(10)),
               ),
-            ),
-          ),
-        ],
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                  I18n.of(context).traps,
+                    style: Theme
+                        .of(context)
+                        .textTheme
+                        .subtitle1,
+                  ),
+                  SizedBox(
+                    width: double.infinity,
+                    child: DataTable2(
+                      columnSpacing: defaultPadding,
+                      minWidth: 1600,
+                      columns: [
+                        DataColumn(
+                          label: Text(I18n.of(context).place_alias),
+                        ),
+                        DataColumn(
+                          label: Text(I18n.of(context).number_of_uses),
+                        ),
+                        DataColumn(
+                          label: Text(I18n.of(context).description),
+                        ),
+
+                      ],
+                      rows: List.generate(
+                        trapsList.length,
+                            (index) => devicesDataRow(trapsList[index]),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
       ),
     );
   }
@@ -65,7 +112,7 @@ DataRow devicesDataRow(YupcityTrapPoi trap) {
       DataCell(
         Row(
           children: [
-           /* SvgPicture.asset(
+            /* SvgPicture.asset(
               fileInfo.icon!,
               height: 15,
               width: 15,
@@ -78,7 +125,7 @@ DataRow devicesDataRow(YupcityTrapPoi trap) {
           ],
         ),
       ),
-      DataCell(Text(trap.lat.toString()!)),
+      DataCell(Text(trap.numberOfUses.toString()!)),
       DataCell(Text(trap.centerDescription!)),
 
     ],

@@ -5,6 +5,9 @@ class YupcityTrapPoi {
   double? lat;
   double? lon;
   int? iV;
+  int? logs;
+  String? createdAt;
+  late int numberOfUses;
 
   YupcityTrapPoi(
       {this.sId,
@@ -12,7 +15,11 @@ class YupcityTrapPoi {
         this.centerDescription,
         this.lat,
         this.lon,
-        this.iV});
+        this.iV,
+        this.logs,
+        this.createdAt,
+        this.numberOfUses = 00,
+      });
 
   YupcityTrapPoi.fromJson(Map<String, dynamic> json) {
     sId = json['_id'];
@@ -21,6 +28,9 @@ class YupcityTrapPoi {
     lat = json['lat'];
     lon = json['lon'];
     iV = json['__v'];
+    logs = json['logs'];
+    createdAt = json['createdAt'];
+    numberOfUses = 00;
   }
 
   Map<String, dynamic> toJson() {
@@ -31,6 +41,9 @@ class YupcityTrapPoi {
     data['lat'] = this.lat;
     data['lon'] = this.lon;
     data['__v'] = this.iV;
+    data['logs'] = this.logs;
+    data ['createdAt'] = this.createdAt;
+    data ['number_of_uses'] = this.numberOfUses;
     return data;
   }
 }

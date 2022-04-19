@@ -1,6 +1,8 @@
 import 'package:event_bus/event_bus.dart';
 import 'package:get_it/get_it.dart';
 import 'package:yupcity_admin/controllers/MenuController.dart';
+import 'package:yupcity_admin/i18n.dart';
+import 'package:yupcity_admin/models/events/LanguageEvent.dart';
 import 'package:yupcity_admin/models/events/UserSearchEvent.dart';
 import 'package:yupcity_admin/models/user.dart';
 import 'package:yupcity_admin/responsive.dart';
@@ -39,19 +41,36 @@ class Header extends StatelessWidget {
         if(route == "users")
         Expanded(child:
          SearchField(route: route,items: itemList,)),
-        //ProfileCard()
+        if(route == "dashboard")
+            Expanded(child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                LanguageCard(),
+              ],
+            )),
+         
       ],
     );
   }
 }
 
-class ProfileCard extends StatelessWidget {
-  const ProfileCard({
+class LanguageCard extends StatefulWidget {
+  const LanguageCard({
     Key? key,
   }) : super(key: key);
 
   @override
+  State<LanguageCard> createState() => _LanguageCardState();
+}
+
+class _LanguageCardState extends State<LanguageCard> {
+
+  List<String> items = ["ESPAÑOL", "ENGLISH"];
+
+  @override
   Widget build(BuildContext context) {
+
+
     return Container(
       margin: EdgeInsets.only(left: defaultPadding),
       padding: EdgeInsets.symmetric(
@@ -63,21 +82,41 @@ class ProfileCard extends StatelessWidget {
         borderRadius: const BorderRadius.all(Radius.circular(10)),
         border: Border.all(color: Colors.white10),
       ),
-      child: Row(
+      child:
+      DropdownButton<String>(alignment: AlignmentDirectional.center,
+        isDense: true,
+        hint: Icon(Icons.language),
+        onChanged: (String? newValue) =>
+            {
+              if(newValue == "ESPAÑOL"){
+               GetIt.I.get<EventBus>().fire(LanguageEvent(currentLanguage: "es"))
+              }else {
+                GetIt.I.get<EventBus>().fire(LanguageEvent(currentLanguage: "en"))
+              }
+
+            },
+        items: items
+            .map<DropdownMenuItem<String>>(
+                (String value) => DropdownMenuItem<String>(
+              value: value,
+              child: Text(value, style: TextStyle(fontSize: 12),),
+            ))
+            .toList(),
+        icon: Icon(Icons.arrow_drop_down),
+        underline: Container(),
+      ),
+      /*Row(
         children: [
-          Image.asset(
-            "assets/images/profile_pic.png",
-            height: 38,
-          ),
+          Icon(Icons.language),
           if (!Responsive.isMobile(context))
             Padding(
               padding:
                   const EdgeInsets.symmetric(horizontal: defaultPadding / 2),
-              child: Text("Angelina Jolie"),
+              child: Text(I18n.of(context).language),
             ),
           Icon(Icons.keyboard_arrow_down),
         ],
-      ),
+      ),*/
     );
   }
 }

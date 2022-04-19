@@ -1,6 +1,8 @@
 import 'package:flutter/services.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:yupcity_admin/constants.dart';
 import 'package:yupcity_admin/controllers/MenuController.dart';
+import 'package:yupcity_admin/models/events/LanguageEvent.dart';
 import 'package:yupcity_admin/screens/login_page.dart';
 import 'package:yupcity_admin/screens/main/main_screen.dart';
 import 'package:get_it/get_it.dart';
@@ -11,6 +13,7 @@ import 'package:event_bus/event_bus.dart';
 import 'package:yupcity_admin/services/local_storage_service.dart';
 import 'package:yupcity_admin/services/login_service.dart';
 import 'package:yupcity_admin/services/navigator_service.dart';
+import 'package:yupcity_admin/i18n.dart';
 
 import 'services/http_client.dart';
 
@@ -24,11 +27,36 @@ void main() async {
 
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  String _locale = "en";
+
+  @override
+  void initState() {
+    _registerEvents();
+    super.initState();
+  }
+
+  void _registerEvents() async {
+    GetIt.I.get<EventBus>().on<LanguageEvent>().listen((event) {
+      if (mounted) {
+        setState(() {
+          _locale = event.currentLanguage;
+        });
+      }
+    });
+  }
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+
       debugShowCheckedModeBanner: false,
       title: 'Admin Panel',
       theme: ThemeData.dark().copyWith(
@@ -37,6 +65,15 @@ class MyApp extends StatelessWidget {
             .apply(bodyColor: Colors.white),
         canvasColor: secondaryColor,
       ),
+      localizationsDelegates: const [
+        I18nDelegate(),
+        // ... app-specific localization delegate[s] here
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+      ],
+      locale: Locale(_locale),
+      supportedLocales: I18nDelegate.supportedLocals,
       home: MultiProvider(
         providers: [
           ChangeNotifierProvider(
@@ -60,7 +97,6 @@ class MyApp extends StatelessWidget {
       ),
     );
   }
-
 }
 Future setupLocator() async {
   GetIt locator = GetIt.I;

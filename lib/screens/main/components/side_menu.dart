@@ -1,3 +1,4 @@
+import 'package:yupcity_admin/i18n.dart';
 import 'package:yupcity_admin/models/events/NavigationScreen.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
@@ -31,7 +32,7 @@ class SideMenu extends StatelessWidget {
             },
           ),
           DrawerListTile(
-            title: "Usuarios",
+            title: I18n.of(context).users,
             svgSrc: "assets/icons/menu_profile.svg",
             press: () {
               String route = "users";
@@ -39,7 +40,7 @@ class SideMenu extends StatelessWidget {
             },
           ),
           DrawerListTile(
-            title: "Traps",
+            title: I18n.of(context).traps,
             svgSrc: "assets/icons/menu_tran.svg",
             press: () {
               String route = "devices";
@@ -47,7 +48,7 @@ class SideMenu extends StatelessWidget {
             },
           ),
           DrawerListTile(
-            title: "Log out",
+            title: I18n.of(context).log_out,
             svgSrc: "assets/icons/menu_store.svg",
             press: () {
               String route = "devices";

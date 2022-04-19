@@ -1,15 +1,47 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:yupcity_admin/i18n.dart';
+import 'package:yupcity_admin/models/user.dart';
+import 'package:yupcity_admin/models/yupcity_register.dart';
+import 'package:yupcity_admin/models/yupcity_trap_poi.dart';
 
 import '../../../constants.dart';
 
 class Chart extends StatelessWidget {
-  const Chart({
-    Key? key,
-  }) : super(key: key);
+  final List<YupcityUser> users;
+  final List<YupcityTrapPoi> traps;
+  final List<YupcityRegister> registries;
+
+  Chart(this.users, this.traps, this.registries);
+
 
   @override
   Widget build(BuildContext context) {
+
+    List<PieChartSectionData> paiChartSelectionDatas = [
+      PieChartSectionData(
+          color: primaryColor,
+          value: users.length.toDouble(),
+          showTitle: true,
+          radius: 25,
+          title: I18n.of(context).users,
+      ),
+      PieChartSectionData(
+          color: Color(0xFF26E5FF),
+          value: traps.length.toDouble(),
+          showTitle: true,
+          radius: 22,
+          title: I18n.of(context).traps,
+      ),
+      PieChartSectionData(
+          color: Color(0xFFFFCF26),
+          value: registries.length.toDouble(),
+          showTitle: true,
+          radius: 19,
+          title: I18n.of(context).logs,
+      ),
+
+    ];
     return SizedBox(
       height: 200,
       child: Stack(
@@ -27,7 +59,7 @@ class Chart extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 SizedBox(height: defaultPadding),
-                Text(
+               /* Text(
                   "29.1",
                   style: Theme.of(context).textTheme.headline4!.copyWith(
                         color: Colors.white,
@@ -35,7 +67,7 @@ class Chart extends StatelessWidget {
                         height: 0.5,
                       ),
                 ),
-                Text("of 128GB")
+                Text("of 128GB")*/
               ],
             ),
           ),
@@ -45,35 +77,4 @@ class Chart extends StatelessWidget {
   }
 }
 
-List<PieChartSectionData> paiChartSelectionDatas = [
-  PieChartSectionData(
-    color: primaryColor,
-    value: 25,
-    showTitle: false,
-    radius: 25,
-  ),
-  PieChartSectionData(
-    color: Color(0xFF26E5FF),
-    value: 20,
-    showTitle: false,
-    radius: 22,
-  ),
-  PieChartSectionData(
-    color: Color(0xFFFFCF26),
-    value: 10,
-    showTitle: false,
-    radius: 19,
-  ),
-  PieChartSectionData(
-    color: Color(0xFFEE2727),
-    value: 15,
-    showTitle: false,
-    radius: 16,
-  ),
-  PieChartSectionData(
-    color: primaryColor.withOpacity(0.1),
-    value: 25,
-    showTitle: false,
-    radius: 13,
-  ),
-];
+

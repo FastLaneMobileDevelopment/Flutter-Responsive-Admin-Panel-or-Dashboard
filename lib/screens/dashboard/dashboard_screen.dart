@@ -1,9 +1,12 @@
+import 'package:yupcity_admin/i18n.dart';
 import 'package:yupcity_admin/models/CardInfo.dart';
 import 'package:yupcity_admin/models/user.dart';
 import 'package:yupcity_admin/models/yupcity_register.dart';
 import 'package:yupcity_admin/models/yupcity_trap_poi.dart';
+import 'package:yupcity_admin/responsive.dart';
 import 'package:yupcity_admin/screens/dashboard/components/my_fields.dart';
 import 'package:flutter/material.dart';
+import 'package:yupcity_admin/screens/dashboard/components/storage_details.dart';
 
 import '../../constants.dart';
 import 'components/header.dart';
@@ -32,23 +35,23 @@ class DashboardScreen extends StatelessWidget {
                   flex: 5,
                   child: Column(
                     children: [
-                      MyFiles(_createCards(allUser,allTraps,allRegistries)),
+                      MyFiles(_createCards(allUser,allTraps,allRegistries, context)),
                       SizedBox(height: defaultPadding),
                       //RecentFiles(),
-                      /*  if (Responsive.isMobile(context))
+                       if (Responsive.isMobile(context))
                         SizedBox(height: defaultPadding),
-                      if (Responsive.isMobile(context)) StarageDetails(),*/
+                      if (Responsive.isMobile(context)) StarageDetails(allUser,allTraps,allRegistries),
                     ],
                   ),
                 ),
-                /*if (!Responsive.isMobile(context))
+                if (!Responsive.isMobile(context))
                   SizedBox(width: defaultPadding),
                 // On Mobile means if the screen is less than 850 we dont want to show it
                 if (!Responsive.isMobile(context))
                   Expanded(
                     flex: 2,
-                    child: StarageDetails(),
-                  ),*/
+                    child: StarageDetails(allUser,allTraps,allRegistries),
+                  ),
               ],
             )
           ],
@@ -57,12 +60,12 @@ class DashboardScreen extends StatelessWidget {
     );
   }
 
-  List<CardInfo> _createCards( List<YupcityUser> allUsers, List<YupcityTrapPoi> allTraps, List<YupcityRegister> allRegistries,){
+  List<CardInfo> _createCards( List<YupcityUser> allUsers, List<YupcityTrapPoi> allTraps, List<YupcityRegister> allRegistries,BuildContext context){
     List<CardInfo> cardsList = [];
 
     cardsList.add(
       CardInfo(
-      title: "Usuarios",
+      title: I18n.of(context).users,
       total: allUser.length,
       svgSrc: "assets/icons/menu_profile.svg",
       route: "users",
@@ -73,7 +76,7 @@ class DashboardScreen extends StatelessWidget {
     //TODO registries
     cardsList.add(
         CardInfo(
-          title: "Usos",
+          title: I18n.of(context).logs,
           total: allRegistries.length,
           svgSrc: "assets/icons/key.svg",
           route: "users",
@@ -83,7 +86,7 @@ class DashboardScreen extends StatelessWidget {
     );
     cardsList.add(
         CardInfo(
-          title: "Traps",
+          title: I18n.of(context).traps,
           total: allTraps.length,
           svgSrc: "assets/icons/scooter.svg",
           route: "devices",
@@ -93,7 +96,7 @@ class DashboardScreen extends StatelessWidget {
     );
     cardsList.add(
         CardInfo(
-          title: "Traps ocupados",
+          title: I18n.of(context).traps_occupied,
           total: 0,
           svgSrc: "assets/icons/lock.svg",
           route: "devices",

@@ -32,7 +32,6 @@ class DashboardBloc extends Bloc<DashboardBlocEvent, DashboardBlocState> {
     try{
       var responseSetPoi =  await logic?.setPoi(event.newTrap);
         emit(SepPoiBoardBlocState());
-        debugPrint(responseSetPoi.toString());
          // UpdatedBoardBlocState
     }on Exception{
       emit(const ErrorBoardBlocState("Error updating new trap"));
