@@ -8,6 +8,7 @@ import 'package:get_it/get_it.dart';
 
 import '../../../constants.dart';
 
+
 class FileInfoCard extends StatelessWidget {
   const FileInfoCard({
     Key? key,

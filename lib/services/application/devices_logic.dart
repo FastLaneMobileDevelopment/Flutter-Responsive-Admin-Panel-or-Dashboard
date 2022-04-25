@@ -18,7 +18,7 @@ class YupcityDevicesLogic extends DevicesLogic {
 
     for(var registry in registerList){
       for(var trap in trapsList){
-        if(registry.keyId == trap.sId){
+        if(registry.trap_id == trap.sId){
           trap.numberOfUses++;
         }
       }

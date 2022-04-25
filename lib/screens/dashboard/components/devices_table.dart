@@ -7,13 +7,12 @@ import 'package:flutter/material.dart';
 import 'package:yupcity_admin/i18n.dart';
 import 'package:yupcity_admin/models/yupcity_register.dart';
 import 'package:yupcity_admin/models/yupcity_trap_poi.dart';
+import 'package:yupcity_admin/screens/trap_details.dart';
 import 'package:yupcity_admin/services/application/devices_logic.dart';
 
 import '../../../constants.dart';
 
 class DevicesTable extends StatefulWidget {
-
-
   final List<YupcityRegister> allRegistries;
   final List<YupcityTrapPoi> allTraps;
 
@@ -24,14 +23,15 @@ class DevicesTable extends StatefulWidget {
 }
 
 class _DevicesTableState extends State<DevicesTable> {
-
   var _devicesBloc = DevicesBloc(logic: YupcityDevicesLogic());
   List<YupcityTrapPoi> trapsList = [];
   bool isLoading = true;
+
   @override
   void initState() {
     super.initState();
-    _devicesBloc.add(GetTrapsWithRegistriesEvent(widget.allTraps, widget.allRegistries));
+    _devicesBloc.add(
+        GetTrapsWithRegistriesEvent(widget.allTraps, widget.allRegistries));
   }
 
   @override
@@ -40,20 +40,18 @@ class _DevicesTableState extends State<DevicesTable> {
       create: (context) => _devicesBloc,
       child: BlocListener<DevicesBloc, DevicesBlocState>(
         listener: (context, state) {
-          if(state is LoadingTrapsBlocState){
-            if(mounted){
+          if (state is LoadingTrapsBlocState) {
+            if (mounted) {
               setState(() {
                 isLoading = true;
               });
             }
-          }else if(state is UpdatedDataTrapsBlocState){
+          } else if (state is UpdatedDataTrapsBlocState) {
             setState(() {
               isLoading = false;
               trapsList = state.allTraps ?? [];
             });
-          }else if( state is ErrorTrapBlocState){
-
-          }
+          } else if (state is ErrorTrapBlocState) {}
         },
         child: BlocBuilder<DevicesBloc, DevicesBlocState>(
           builder: (context, state) {
@@ -67,17 +65,14 @@ class _DevicesTableState extends State<DevicesTable> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                  I18n.of(context).traps,
-                    style: Theme
-                        .of(context)
-                        .textTheme
-                        .subtitle1,
+                    I18n.of(context).traps,
+                    style: Theme.of(context).textTheme.subtitle1,
                   ),
                   SizedBox(
                     width: double.infinity,
                     child: DataTable2(
                       columnSpacing: defaultPadding,
-                      minWidth: 1600,
+                      minWidth: 800,
                       columns: [
                         DataColumn(
                           label: Text(I18n.of(context).place_alias),
@@ -88,11 +83,11 @@ class _DevicesTableState extends State<DevicesTable> {
                         DataColumn(
                           label: Text(I18n.of(context).description),
                         ),
-
                       ],
                       rows: List.generate(
                         trapsList.length,
-                            (index) => devicesDataRow(trapsList[index]),
+                        (index) => devicesDataRow(
+                            trapsList[index], context, widget.allRegistries),
                       ),
                     ),
                   ),
@@ -104,30 +99,41 @@ class _DevicesTableState extends State<DevicesTable> {
       ),
     );
   }
-}
 
-DataRow devicesDataRow(YupcityTrapPoi trap) {
-  return DataRow(
-    cells: [
-      DataCell(
-        Row(
-          children: [
-            /* SvgPicture.asset(
-              fileInfo.icon!,
-              height: 15,
-              width: 15,
-            ),*/
-            Icon(Icons.lock_outline, color: Colors.lightBlue,),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
-              child: Text(trap.center!),
-            ),
-          ],
-        ),
-      ),
-      DataCell(Text(trap.numberOfUses.toString()!)),
-      DataCell(Text(trap.centerDescription!)),
+  DataRow devicesDataRow(
+      YupcityTrapPoi trap, BuildContext context, allRegistries) {
+    return DataRow(
+      cells: [
+        DataCell(
+            Row(
+              children: [
+                Icon(
+                  Icons.lock_outline,
+                  color: Colors.lightBlue,
+                ),
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: defaultPadding),
+                  child: Text(trap.center!),
+                ),
+              ],
+            ), onTap: () {
+          moveToDetail(context, allRegistries, trap);
+        }),
+        DataCell(Text(trap.numberOfUses.toString()), onTap: () {
+          moveToDetail(context, allRegistries, trap);
+        }),
+        DataCell(Text(trap.centerDescription ?? ""), onTap: () {
+          moveToDetail(context, allRegistries, trap);
+        }),
+      ],
+    );
+  }
 
-    ],
-  );
+  void moveToDetail(BuildContext context, allRegistries, YupcityTrapPoi trap) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => TrapDetails(allRegistries, trap)),
+    );
+  }
 }

@@ -29,6 +29,7 @@ class SideMenu extends StatelessWidget {
             press: () {
               String route = "dashboard";
               GetIt.I.get<EventBus>().fire(NavigationScreen(routeName: route));
+              Navigator.pop(context);
             },
           ),
           DrawerListTile(
@@ -37,6 +38,7 @@ class SideMenu extends StatelessWidget {
             press: () {
               String route = "users";
               GetIt.I.get<EventBus>().fire(NavigationScreen(routeName: route));
+              Navigator.pop(context);
             },
           ),
           DrawerListTile(
@@ -45,6 +47,7 @@ class SideMenu extends StatelessWidget {
             press: () {
               String route = "devices";
               GetIt.I.get<EventBus>().fire(NavigationScreen(routeName: route));
+              Navigator.pop(context);
             },
           ),
           DrawerListTile(
@@ -56,6 +59,7 @@ class SideMenu extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) =>  LoginScreenPage()),
+
               );
 
             },

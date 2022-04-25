@@ -1,4 +1,7 @@
 
+import 'package:event_bus/event_bus.dart';
+import 'package:get_it/get_it.dart';
+import 'package:yupcity_admin/models/events/NavigationScreen.dart';
 import 'package:yupcity_admin/models/yupcity_register.dart';
 
 import '../../constants.dart';
@@ -25,7 +28,19 @@ class UserScreen extends StatelessWidget {
         child: Column(
           children: [
             Header(route: "users", itemList: allUser),
-            SizedBox(height: defaultPadding),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                IconButton(
+                  icon: Icon(Icons.arrow_back),
+                  onPressed: () {
+                    String route = "dashboard";
+                    GetIt.I.get<EventBus>().fire(NavigationScreen(routeName: route));
+                  },
+
+                ),
+              ],
+            ),
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

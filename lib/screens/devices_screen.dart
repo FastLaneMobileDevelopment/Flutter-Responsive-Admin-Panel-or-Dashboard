@@ -1,4 +1,7 @@
+import 'package:event_bus/event_bus.dart';
+import 'package:get_it/get_it.dart';
 import 'package:yupcity_admin/i18n.dart';
+import 'package:yupcity_admin/models/events/NavigationScreen.dart';
 import 'package:yupcity_admin/models/yupcity_register.dart';
 import 'package:yupcity_admin/models/yupcity_trap_poi.dart';
 import 'package:yupcity_admin/responsive.dart';
@@ -31,6 +34,14 @@ class DevicesScreen extends StatelessWidget {
                   "Devices",
                   style: Theme.of(context).textTheme.subtitle1,
                 ),*/
+                IconButton(
+                  icon: Icon(Icons.arrow_back),
+                  onPressed: () {
+                    String route = "dashboard";
+                    GetIt.I.get<EventBus>().fire(NavigationScreen(routeName: route));
+                  },
+
+                ),
                 SizedBox(
                   width: 15,
                 ),

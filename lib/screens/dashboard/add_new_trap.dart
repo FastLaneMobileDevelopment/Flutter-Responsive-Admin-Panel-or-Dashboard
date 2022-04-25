@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:yupcity_admin/bloc/dashboard/dashboard_bloc.dart';
 import 'package:yupcity_admin/bloc/dashboard/dashboard_bloc_event.dart';
+import 'package:yupcity_admin/i18n.dart';
 import 'package:yupcity_admin/models/yupcity_trap_poi.dart';
 import 'package:yupcity_admin/services/application/dashboard_logic.dart';
 
@@ -72,7 +73,7 @@ class AddNewTrapScreenState extends State<AddNewTrapScreen> {
   Set<Marker> markers = Set();
 
 
-  _showModal(LatLng selectedPosition) {
+  _showModal(LatLng selectedPosition,ctx) {
 
     showModalBottomSheet(
         isScrollControlled: true,
@@ -83,13 +84,13 @@ class AddNewTrapScreenState extends State<AddNewTrapScreen> {
         context: context,
         builder: (context) => StatefulBuilder(
                 builder: (BuildContext context, StateSetter setStater) {
-                      return _buildAddNewTrapForm(setStater, selectedPosition);
+                      return _buildAddNewTrapForm(setStater, selectedPosition, ctx);
 
 
             }));
   }
 
-  Widget _buildAddNewTrapForm(StateSetter setStater, LatLng selectedPosition) {
+  Widget _buildAddNewTrapForm(StateSetter setStater, LatLng selectedPosition, BuildContext context) {
 
     return Stack(
       children: [
@@ -99,7 +100,7 @@ class AddNewTrapScreenState extends State<AddNewTrapScreen> {
 
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 20.0),
-                child: Text( "Nuevo trap", style: TextStyle(fontSize: 26),),
+                child: Text( I18n.of(context).new_trap, style: TextStyle(fontSize: 26),),
               ),
 
               Padding(
@@ -116,14 +117,14 @@ class AddNewTrapScreenState extends State<AddNewTrapScreen> {
                             autovalidateMode: AutovalidateMode.onUserInteraction,
                             decoration: InputDecoration(
                               labelText:
-                              'Nombre del Trap (Alias)',
+                              I18n.of(context).trap_name,
                             ),
                             onChanged: (value){
                                 nameTrap = value ?? "";
                             },
                             validator: FormBuilderValidators.compose([
-                              FormBuilderValidators.required(context, errorText: "El alias es requerido"),
-                              FormBuilderValidators.max(context, 30, errorText: "Max 30 caracteres"),
+                              FormBuilderValidators.required(context, errorText: I18n.of(context).required_name),
+                              FormBuilderValidators.max(context, 30, errorText: I18n.of(context).max_letters),
                             ]),
                             keyboardType: TextInputType.name,
                       ),
@@ -132,14 +133,14 @@ class AddNewTrapScreenState extends State<AddNewTrapScreen> {
                               name: 'description',
                               decoration: InputDecoration(
                                 labelText:
-                                'Descripción',
+                                I18n.of(context).description,
                               ),
                               onChanged: (value){
                                     descriptionTrap = value ?? "";
                               },
                               // valueTransformer: (text) => num.tryParse(text),
                               validator: FormBuilderValidators.compose([
-                                FormBuilderValidators.required(context,errorText: "La descripsión es requerida"),
+                                FormBuilderValidators.required(context,errorText: I18n.of(context).required_description),
                                 FormBuilderValidators.max(context, 70, errorText: "Max 70 caracteres"),
                               ]),
                               keyboardType: TextInputType.name,
@@ -152,12 +153,26 @@ class AddNewTrapScreenState extends State<AddNewTrapScreen> {
                         height: 20,
                       ),
                       ElevatedButton(
-                        child: Text('Submit'),
+                        child: Text(I18n.of(context).save),
                         onPressed: ()  {
                           _formKey.currentState?.save() ;
                           if (_formKey.currentState?.validate() ?? false) {
                             print(_formKey.currentState?.value);
                             _onSummited(selectedPosition, nameTrap, descriptionTrap);
+                            Navigator.pop(context);
+                            setState(() {
+                              lockedMarker.clear();
+
+                            });
+
+                            final snackBar = SnackBar(
+                              duration: Duration(seconds: 6),
+                              content: Text(I18n.of(context).new_trap_successfully, style: TextStyle(fontSize: 16, color: Colors.white),),
+                              backgroundColor: Color(0xFF212332),
+                            );
+
+                            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
                           } else {
                             print("validation failed");
                           }
@@ -245,14 +260,14 @@ class AddNewTrapScreenState extends State<AddNewTrapScreen> {
                 initialCameraPosition: CameraPosition(
                   target: LatLng(currentPosition?.latitude ?? 0.0,
                       currentPosition?.longitude ?? 0.0),
-                  zoom: 14.4746,
+                  zoom: 17.4746,
                 ),
                 onLongPress: (LatLng selectedPosition){
                   Marker point = Marker(markerId: MarkerId("id"), position: selectedPosition);
                 setState(() {
                   lockedMarker.add(point);
                 });
-                _showModal(selectedPosition);
+                _showModal(selectedPosition,context);
                 },
                 onMapCreated: (GoogleMapController controller) {
                   _controller.complete(controller);
@@ -269,7 +284,7 @@ class AddNewTrapScreenState extends State<AddNewTrapScreen> {
                 decoration: BoxDecoration(
                   color: Color(0xFF212332),
                 ),
-                child: Text("Mantén presionado para nuevo trap",overflow: TextOverflow.visible, style: TextStyle(color: Colors.white, fontSize: 14),)
+                child: Text(I18n.of(context).how_create_new_trap,overflow: TextOverflow.visible, style: TextStyle(color: Colors.white, fontSize: 14),)
             ),
 
             backgroundColor: Color(0xFF212332),
@@ -287,7 +302,6 @@ class AddNewTrapScreenState extends State<AddNewTrapScreen> {
     return Scaffold(
         backgroundColor: const Color(0xFFF1F5F8),
         // drawer: DrawerWidget(),
-
         resizeToAvoidBottomInset: true,
         body: buildDashboard(context));
   }

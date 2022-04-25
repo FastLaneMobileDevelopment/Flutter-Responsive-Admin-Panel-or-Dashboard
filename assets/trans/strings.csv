@@ -17,3 +17,11 @@ description,Descripción,Description
 logs,Usos,Logs
 add_new,Agregar Nuevo,Add New
 language,Lenguaje,Language
+how_create_new_trap,Mantén presionado para nuevo trap,Long press to create a new trap
+new_trap,Nuevo trap,New trap
+trap_name,Nombre del Trap (Alias o Lugar),Trap's name (nick name or center)
+required_name,El nombre es requerido,Trap's name is required
+max_letters,Max 30 caracteres,Max 30 characters
+required_description,La descripción es requerida,Description field is required
+save,Guardar,Save
+new_trap_successfully,Trap nuevo creado correctamente,New trap created successfully
