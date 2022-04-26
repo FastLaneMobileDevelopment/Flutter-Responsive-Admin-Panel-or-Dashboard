@@ -52,6 +52,8 @@ dependencies:
   rflutter_alert: ^2.0.4
   flutter_bloc: ^8.0.0
   equatable: ^2.0.3
+  pdf: ^3.7.4
+  printing: ^5.8.0
 
 
 dev_dependencies:
