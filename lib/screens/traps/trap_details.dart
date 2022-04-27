@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:yupcity_admin/models/yupcity_register.dart';
 import 'package:yupcity_admin/models/yupcity_trap_poi.dart';
 import 'package:yupcity_admin/responsive.dart';
-import 'package:yupcity_admin/screens/dashboard/components/trap_line_chart.dart';
-import 'package:yupcity_admin/screens/pdf_report_page.dart';
+import 'package:yupcity_admin/screens/traps/trap_line_chart.dart';
+import 'package:yupcity_admin/screens/traps/pdf_report_page.dart';
 
-import '../../constants.dart';
+import '../../../constants.dart';
 
 class TrapDetails extends StatefulWidget {
 

@@ -5,11 +5,11 @@ import 'package:yupcity_admin/models/events/NavigationScreen.dart';
 import 'package:yupcity_admin/models/yupcity_register.dart';
 import 'package:yupcity_admin/models/yupcity_trap_poi.dart';
 import 'package:yupcity_admin/responsive.dart';
-import 'package:yupcity_admin/screens/dashboard/add_new_trap.dart';
-import 'package:yupcity_admin/screens/dashboard/components/devices_table.dart';
+import 'package:yupcity_admin/screens/traps/add_new_trap.dart';
+import 'package:yupcity_admin/screens/traps/devices_table.dart';
 import 'package:flutter/material.dart';
 
-import '../../constants.dart';
+import '../../../constants.dart';
 import 'package:yupcity_admin/screens/dashboard/components/header.dart';
 
 

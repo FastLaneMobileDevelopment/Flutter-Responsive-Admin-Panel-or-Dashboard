@@ -7,10 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:yupcity_admin/i18n.dart';
 import 'package:yupcity_admin/models/yupcity_register.dart';
 import 'package:yupcity_admin/models/yupcity_trap_poi.dart';
-import 'package:yupcity_admin/screens/trap_details.dart';
+import 'package:yupcity_admin/screens/traps/trap_details.dart';
 import 'package:yupcity_admin/services/application/devices_logic.dart';
 
-import '../../../constants.dart';
+import '../../constants.dart';
 
 class DevicesTable extends StatefulWidget {
   final List<YupcityRegister> allRegistries;

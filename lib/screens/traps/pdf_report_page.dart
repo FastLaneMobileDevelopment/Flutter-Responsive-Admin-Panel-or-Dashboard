@@ -3,7 +3,7 @@ import 'package:yupcity_admin/models/yupcity_register.dart';
 import 'package:yupcity_admin/models/yupcity_trap_poi.dart';
 import 'package:yupcity_admin/services/export_pdf.dart';
 
-import '../../constants.dart';
+import '../../../constants.dart';
 
 class PDFReportPage extends StatefulWidget {
 

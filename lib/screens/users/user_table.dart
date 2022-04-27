@@ -7,7 +7,7 @@ import 'package:yupcity_admin/models/events/UserSearchEvent.dart';
 import 'package:yupcity_admin/models/user.dart';
 import 'package:yupcity_admin/models/yupcity_register.dart';
 
-import '../../../constants.dart';
+import '../../constants.dart';
 
 class UserTable extends StatefulWidget {
   final allUsers;

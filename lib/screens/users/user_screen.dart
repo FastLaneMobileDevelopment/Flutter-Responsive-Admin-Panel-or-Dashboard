@@ -4,13 +4,13 @@ import 'package:get_it/get_it.dart';
 import 'package:yupcity_admin/models/events/NavigationScreen.dart';
 import 'package:yupcity_admin/models/yupcity_register.dart';
 
-import '../../constants.dart';
+import '../../../constants.dart';
 
 import 'package:yupcity_admin/models/user.dart';
 import 'package:yupcity_admin/models/yupcity_trap_poi.dart';
 import 'package:yupcity_admin/screens/dashboard/components/header.dart';
 import 'package:flutter/material.dart';
-import 'dashboard/components/user_table.dart';
+import 'user_table.dart';
 
 class UserScreen extends StatelessWidget {
   final List<YupcityUser> allUser;
@@ -49,7 +49,9 @@ class UserScreen extends StatelessWidget {
                   child: Column(
                     children: [
                      // MyFiles(),
+
                       SizedBox(height: defaultPadding),
+                      //todo: add line_chart
                       UserTable(allUser, allRegistries),
                     ],
                   ),
