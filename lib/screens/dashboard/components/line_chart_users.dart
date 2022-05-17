@@ -1,64 +1,63 @@
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:yupcity_admin/bloc/chart/chart_bloc.dart';
 import 'package:yupcity_admin/bloc/chart/chart_bloc_event.dart';
 import 'package:yupcity_admin/bloc/chart/chart_bloc_state.dart';
 import 'package:yupcity_admin/i18n.dart';
+import 'package:yupcity_admin/models/UserGrowthWeekly.dart';
 import 'package:yupcity_admin/models/user.dart';
-import 'package:yupcity_admin/models/yupcity_register.dart';
-import 'package:yupcity_admin/models/yupcity_trap_poi.dart';
 import 'package:yupcity_admin/services/application/chart_logic.dart';
 
-import '../../../constants.dart';
-import 'chart.dart';
-import 'storage_info_card.dart';
+int columIndex = 0;
 
-class StarageDetails extends StatefulWidget {
+var dateTimeEnd = DateTime.now();
+
+class UserGrowthChart extends StatefulWidget {
   final List<YupcityUser> allUsers;
-  final List<YupcityTrapPoi> allTraps;
-  final List<YupcityRegister> allRegistries;
 
-  StarageDetails(this.allUsers, this.allTraps, this.allRegistries);
+  UserGrowthChart(this.allUsers);
 
   @override
-  State<StarageDetails> createState() => _StarageDetailsState();
+  State<UserGrowthChart> createState() => _UserGrowthChartState();
 }
 
-class _StarageDetailsState extends State<StarageDetails> {
-
+class _UserGrowthChartState extends State<UserGrowthChart> {
   var _chartBloc = ChartBloc(logic: YupcityChartLogic());
   var isLoading = true;
-  List<YupcityUser> users7List = [];
-  List<YupcityTrapPoi> traps7List = [];
-  List<YupcityRegister> register7List = [];
+  UserGrowthWeekly userGrowthWeekly = UserGrowthWeekly();
+  List<Color> gradientColors = [
+    const Color(0xff23b6e6),
+    const Color(0xff02d39a),
+  ];
+
+
+
 
    @override
   void initState() {
-     _chartBloc.add(GetDataLast7DaysEvent(widget.allUsers, widget.allTraps, widget.allRegistries));
+     _chartBloc.add(GetUserDataLast7DaysEvent(widget.allUsers,));
     super.initState();
   }
-
   @override
   Widget build(BuildContext context) {
-
-
+    columIndex = 0;
     return BlocProvider(
       create: (context) => _chartBloc,
       child: BlocListener<ChartBloc, ChartBlocState>(
         listener: (context, state) {
-          if(state is LoadingChartBlocState){
+          if(state is LoadingUserChartBlocState){
             if(mounted){
               setState(() {
                 isLoading = true;
               });
             }
-          }else if(state is UpdatedDataChartBlocState){
+          }else if(state is UpdatedUserDataChartBlocState){
             setState(() {
               isLoading = false;
-              users7List = state.allUsers ?? [];
-              traps7List = state.allTraps ?? [];
-              register7List = state.registries ?? [];
+              userGrowthWeekly = state.userGrowthWeekly ;
             });
+            debugPrint(userGrowthWeekly.toString());
           }else if( state is ErrorChartBlocState){
            setState(() {
              isLoading = true;
@@ -70,56 +69,287 @@ class _StarageDetailsState extends State<StarageDetails> {
             if(isLoading){
               return Center(child: CircularProgressIndicator(),);
             }else {
-              return Container(
-                padding: EdgeInsets.all(defaultPadding),
-                decoration: BoxDecoration(
-                  color: secondaryColor,
-                  borderRadius: const BorderRadius.all(Radius.circular(10)),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                    I18n.of(context).last_seven_days,
-
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    SizedBox(height: defaultPadding),
-                    Chart(users7List,traps7List,register7List),
-                    StorageInfoCard(
-                      svgSrc: "assets/icons/Documents.svg",
-                      title: I18n.of(context).users,
-                      amountFiltered: users7List.length.toString() + " "+ I18n.of(context).new_,
-                      amountTotal: widget.allUsers.length,
-                    ),
-                    StorageInfoCard(
-                      svgSrc: "assets/icons/media.svg",
-                      title: I18n.of(context).traps,
-                      amountFiltered: traps7List.length.toString() +" "+ I18n.of(context).new_,
-                      amountTotal: widget.allTraps.length,
-                    ),
-                    StorageInfoCard(
-                      svgSrc: "assets/icons/folder.svg",
-                      title: I18n.of(context).number_of_uses,
-                      amountFiltered: register7List.length.toString() +" "+
-                          I18n.of(context).new_,
-                      amountTotal: widget.allRegistries.length,
-                    ),
-                    /*StorageInfoCard(
-                    svgSrc: "assets/icons/unknown.svg",
-                    title: "Unknown",
-                    amountFiltered: "1.3GB",
-                    amountTotal: 140,
-                  ),*/
-                  ],
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 8.0),
+                child: AspectRatio(
+                  aspectRatio: 1.7,
+                  child: Card(
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                    color: const Color(0xff2c4260),
+                    child:  _BarChart(userGrowthWeekly),
+                  ),
                 ),
               );
+
             }},
         ),
       ),
     );
   }
+
+
+
+
+
+
+
+}
+
+
+class _BarChart extends StatelessWidget {
+
+  UserGrowthWeekly userGrowthChart;
+
+  _BarChart(this.userGrowthChart);
+  late BuildContext ctx ;
+
+  @override
+  Widget build(BuildContext context) {
+     ctx = context;
+    return BarChart(
+      BarChartData(
+        barTouchData: barTouchData,
+        titlesData: titlesData,
+        borderData: borderData,
+        barGroups: barGroups(userGrowthChart),
+        gridData: FlGridData(show: false),
+        alignment: BarChartAlignment.spaceAround,
+        maxY: 20,
+      ),
+    );
+  }
+
+
+
+  BarTouchData get barTouchData => BarTouchData(
+    enabled: false,
+    touchTooltipData: BarTouchTooltipData(
+      tooltipBgColor: Colors.transparent,
+      tooltipPadding: const EdgeInsets.all(0),
+      tooltipMargin: 8,
+      getTooltipItem: (
+          BarChartGroupData group,
+          int groupIndex,
+          BarChartRodData rod,
+          int rodIndex,
+          ) {
+        return BarTooltipItem(
+          rod.toY.round().toString(),
+          const TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        );
+      },
+    ),
+  );
+
+  Widget getTitles(double value, TitleMeta meta,) {
+    const  style = TextStyle(
+      color: Color(0xff7589a2),
+      fontWeight: FontWeight.bold,
+      fontSize: 14,
+    );
+
+    String text= "";
+    int distanceDay  = ((6 - columIndex)*-1).toInt();
+    columIndex++;
+    int weekday = dateTimeEnd.add(Duration(days: distanceDay)).weekday;
+    debugPrint(weekday.toString());
+
+    switch (weekday) {
+      case 1:
+        text = I18n.of(ctx).monday;
+        break;
+      case 2:
+        text = I18n.of(ctx).tuesday;
+        break;
+      case 3:
+        text = I18n.of(ctx).wednesday;
+        break;
+      case 4:
+        text = I18n.of(ctx).thursday;
+        break;
+      case 5:
+        text = I18n.of(ctx).friday;
+        break;
+      case 6:
+        text = I18n.of(ctx).saturday;
+        break;
+      case 7:
+        text = I18n.of(ctx).sunday;
+        break;
+      default:
+        text = "";
+        break;
+    }
+    return Center(child: Text(text, style: style));
+  }
+
+  FlTitlesData get titlesData => FlTitlesData(
+    show: true,
+    bottomTitles: AxisTitles(
+      sideTitles: SideTitles(
+        interval: 1,
+        showTitles: true,
+        reservedSize: 30,
+        getTitlesWidget: getTitles,
+      ),
+    ),
+    leftTitles: AxisTitles(
+      sideTitles: SideTitles(showTitles: false),
+    ),
+    topTitles: AxisTitles(
+      sideTitles: SideTitles(showTitles: false),
+    ),
+    rightTitles: AxisTitles(
+      sideTitles: SideTitles(showTitles: false),
+    ),
+
+  );
+
+  FlBorderData get borderData => FlBorderData(
+    show: false,
+  );
+
+  final _barsGradient = const LinearGradient(
+    colors: [
+      Colors.lightBlueAccent,
+      Colors.greenAccent,
+    ],
+    begin: Alignment.bottomCenter,
+    end: Alignment.topCenter,
+  );
+
+  List<BarChartGroupData> barGroups(UserGrowthWeekly week){
+    List<BarChartGroupData> barChart = [];
+
+    for(var i = 0; i <= 6; i++) {
+      int distanceDay = ((6 - columIndex) * -1).toInt();
+      columIndex++;
+      int weekday = dateTimeEnd
+          .add(Duration(days: distanceDay))
+          .weekday;
+
+      switch (weekday) {
+        case 1:
+          barChart.add(
+            BarChartGroupData(
+              x: 0,
+              barRods: [
+                BarChartRodData(
+                  toY: week.monday.length.toDouble(),
+                  gradient: _barsGradient,
+                )
+              ],
+              showingTooltipIndicators: [0],
+            ),
+          );
+          break;
+        case 2:
+          barChart.add(
+            BarChartGroupData(
+              x: 0,
+              barRods: [
+                BarChartRodData(
+                  toY: week.tuesday.length.toDouble(),
+                  gradient: _barsGradient,
+                )
+              ],
+              showingTooltipIndicators: [0],
+            ),
+          );
+          break;
+        case 3:
+          barChart.add(
+            BarChartGroupData(
+              x: 0,
+              barRods: [
+                BarChartRodData(
+                  toY: week.wednesday.length.toDouble(),
+                  gradient: _barsGradient,
+                )
+              ],
+              showingTooltipIndicators: [0],
+            ),
+          );
+          break;
+        case 4:
+          barChart.add(
+            BarChartGroupData(
+              x: 0,
+              barRods: [
+                BarChartRodData(
+                  toY: week.thursday.length.toDouble(),
+                  gradient: _barsGradient,
+                )
+              ],
+              showingTooltipIndicators: [0],
+            ),
+          );
+          break;
+        case 5:
+          barChart.add(
+            BarChartGroupData(
+              x: 0,
+              barRods: [
+                BarChartRodData(
+                  toY: week.friday.length.toDouble(),
+                  gradient: _barsGradient,
+                )
+              ],
+              showingTooltipIndicators: [0],
+            ),
+          );
+          break;
+        case 6:
+          barChart.add(
+            BarChartGroupData(
+              x: 0,
+              barRods: [
+                BarChartRodData(
+                  toY: week.saturday.length.toDouble(),
+                  gradient: _barsGradient,
+                )
+              ],
+              showingTooltipIndicators: [0],
+            ),
+          );
+          break;
+        case 7:
+          barChart.add(
+            BarChartGroupData(
+              x: 0,
+              barRods: [
+                BarChartRodData(
+                  toY: week.sunday.length.toDouble(),
+                  gradient: _barsGradient,
+                )
+              ],
+              showingTooltipIndicators: [0],
+            ),
+          );
+          break;
+        default:
+          barChart.add(
+            BarChartGroupData(
+              x: 0,
+              barRods: [
+                BarChartRodData(
+                  toY: 0,
+                  gradient: _barsGradient,
+                )
+              ],
+              showingTooltipIndicators: [0],
+            ),
+          );
+          break;
+      }
+    }
+
+    return barChart;
+  }
+
+
 }

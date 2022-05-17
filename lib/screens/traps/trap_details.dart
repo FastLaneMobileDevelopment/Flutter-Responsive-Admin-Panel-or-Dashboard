@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:yupcity_admin/i18n.dart';
 import 'package:yupcity_admin/models/yupcity_register.dart';
 import 'package:yupcity_admin/models/yupcity_trap_poi.dart';
 import 'package:yupcity_admin/responsive.dart';
@@ -40,7 +41,7 @@ class _TrapDetailsState extends State<TrapDetails> {
                       color: secondaryColor,
                       borderRadius: const BorderRadius.all(Radius.circular(10)),
                     ),
-                    child:  Text("Disponible",),
+                    child:  Text(I18n.of(context).available,),
                   ),
                   ElevatedButton.icon(
                     style: TextButton.styleFrom(
@@ -57,7 +58,7 @@ class _TrapDetailsState extends State<TrapDetails> {
                       );
                     },
                     icon: Icon(Icons.add),
-                    label: Text("Create report"),
+                    label: Text(I18n.of(context).create_report),
                   ),
 
             ]),
@@ -69,7 +70,7 @@ class _TrapDetailsState extends State<TrapDetails> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      Text("Creado el: 12-12-23", style: TextStyle(
+                      Text( I18n.of(context).create_at + ": 12-12-23", style: TextStyle(
                         fontSize: 10,
                       ),),
                     ],
@@ -95,12 +96,12 @@ class _TrapDetailsState extends State<TrapDetails> {
                 itemCount: 10,
                 itemBuilder: (context, index){
                   var color = orange;
-                  var textTitle = "Closed";
+                  var textTitle = I18n.of(context).closed;
                   bool isOpened = false;
 
                   if(index % 2 == 0 ){
                     color = Color.fromRGBO(0,160,130,1);
-                    textTitle = "Opened";
+                    textTitle = I18n.of(context).opened;
                     isOpened = true;
                   }
                   return
@@ -171,7 +172,7 @@ class _TrapDetailsState extends State<TrapDetails> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
         Text("123 min", style: TextStyle(fontSize: 12),),
-        Text("de uso", style: TextStyle(fontSize: 12),)
+        Text(I18n.of(context).of_use, style: TextStyle(fontSize: 12),)
       ],);
     }else{
       return Icon(Icons.lock_outline, color: Colors.white);

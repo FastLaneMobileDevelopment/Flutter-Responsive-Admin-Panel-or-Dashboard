@@ -6,7 +6,7 @@ class YupcityUser {
   String? password;
   int? iV;
   late int numberOfUses;
-  String? createdAt;
+  DateTime? createdAt;
 
   YupcityUser(
       {this.sId,
@@ -27,7 +27,7 @@ class YupcityUser {
     password = json['password'];
     iV = json['__v'];
     numberOfUses = 00;
-    createdAt = json['createdAt'];
+    createdAt = DateTime.parse(json['createdAt'] ?? DateTime.parse("2022-04-26T09:33:56.962Z").toString());
   }
 
   Map<String, dynamic> toJson() {

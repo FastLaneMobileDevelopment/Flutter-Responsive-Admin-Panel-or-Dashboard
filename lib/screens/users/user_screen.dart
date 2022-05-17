@@ -3,6 +3,7 @@ import 'package:event_bus/event_bus.dart';
 import 'package:get_it/get_it.dart';
 import 'package:yupcity_admin/models/events/NavigationScreen.dart';
 import 'package:yupcity_admin/models/yupcity_register.dart';
+import 'package:yupcity_admin/screens/dashboard/components/line_chart_users.dart';
 
 import '../../../constants.dart';
 
@@ -49,9 +50,7 @@ class UserScreen extends StatelessWidget {
                   child: Column(
                     children: [
                      // MyFiles(),
-
-                      SizedBox(height: defaultPadding),
-                      //todo: add line_chart
+                      UserGrowthChart(allUser),
                       UserTable(allUser, allRegistries),
                     ],
                   ),

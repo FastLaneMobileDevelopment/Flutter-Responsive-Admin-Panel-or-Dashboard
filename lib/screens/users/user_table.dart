@@ -125,7 +125,7 @@ DataRow recentFileDataRow(YupcityUser user) {
           ],
         ),
       ),
-      DataCell(Text(user.numberOfUses.toString() ?? "0", overflow: TextOverflow.ellipsis,)),
+      DataCell(Text(user.numberOfUses.toString(), overflow: TextOverflow.ellipsis,)),
       DataCell(Text(user.username ?? "", overflow: TextOverflow.ellipsis,)),
     ],
   );

@@ -25,3 +25,17 @@ max_letters,Max 30 caracteres,Max 30 characters
 required_description,La descripción es requerida,Description field is required
 save,Guardar,Save
 new_trap_successfully,Trap nuevo creado correctamente,New trap created successfully
+monday,L,Mo
+tuesday,M,Tu
+wednesday,X,We
+thursday,J,Th
+friday,V,Fr
+saturday,S,Sa
+sunday,D,Su
+available,Disponible,Available
+occupied,Ocupado,Occupied
+create_report,Crear reporte,Create Report
+create_at,Creado el,Create at
+opened,Abierto,Opened
+closed,Cerrado,Closed
+of_use,de uso,of use

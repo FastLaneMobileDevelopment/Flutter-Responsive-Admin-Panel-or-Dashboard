@@ -1,4 +1,5 @@
 
+import 'package:yupcity_admin/models/UserGrowthWeekly.dart';
 import 'package:yupcity_admin/models/user.dart';
 import 'package:yupcity_admin/models/yupcity_register.dart';
 import 'package:yupcity_admin/models/yupcity_trap_poi.dart';
@@ -15,6 +16,9 @@ class ChartBloc extends Bloc<ChartBlocEvent, ChartBlocState> {
        getDataLast7DaysEventHandler(emit, event);
     });
 
+    on<GetUserDataLast7DaysEvent>((event, emit) {
+      getUserDataLast7DaysEventHandler(emit, event);
+    });
 
   }
 
@@ -46,6 +50,30 @@ class ChartBloc extends Bloc<ChartBlocEvent, ChartBlocState> {
       }
 
       emit(UpdatedDataChartBlocState(allUserFiltered,allTrapsFiltered, allRegistriesFiltered));
+      // UpdatedBoardBlocState
+    }on Exception{
+      emit(const ErrorChartBlocState("Error updating chart"));
+    }
+  }
+
+  void getUserDataLast7DaysEventHandler(Emitter<ChartBlocState> emit, GetUserDataLast7DaysEvent event)  {
+    emit(LoadingUserChartBlocState());
+
+    try{
+
+      List<YupcityUser> allUserFiltered = [];
+      UserGrowthWeekly userGrowthWeekly = UserGrowthWeekly();
+      var responseUsers = logic?.getUsersLast7Days(event.allUsers);
+      if(responseUsers != null) {
+        allUserFiltered = responseUsers;
+      }
+
+      var responseChartData = logic?.getUsersLast7DaysForChart(allUserFiltered);
+      if(responseChartData != null) {
+        userGrowthWeekly = responseChartData;
+      }
+
+      emit(UpdatedUserDataChartBlocState(userGrowthWeekly));
       // UpdatedBoardBlocState
     }on Exception{
       emit(const ErrorChartBlocState("Error updating chart"));

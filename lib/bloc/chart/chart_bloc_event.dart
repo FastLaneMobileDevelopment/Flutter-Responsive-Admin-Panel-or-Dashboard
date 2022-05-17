@@ -20,6 +20,16 @@ class GetDataLast7DaysEvent extends ChartBlocEvent{
 
 }
 
+class GetUserDataLast7DaysEvent extends ChartBlocEvent{
+
+  final List<YupcityUser> allUsers;
+
+  const GetUserDataLast7DaysEvent(this.allUsers,);
+
+  @override
+  List<Object> get props => [];
+
+}
 
 
 

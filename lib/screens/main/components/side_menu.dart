@@ -8,6 +8,7 @@ import 'package:yupcity_admin/screens/login_page.dart';
 import 'package:yupcity_admin/screens/main/main_screen.dart';
 import 'package:yupcity_admin/services/login_service.dart';
 
+import '../../../constants.dart';
 
 class SideMenu extends StatelessWidget {
   const SideMenu({
@@ -17,11 +18,11 @@ class SideMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      backgroundColor: Colors.black,
+      backgroundColor: bgColor,
       child: ListView(
         children: [
           DrawerHeader(
-            child: Image.asset("assets/images/yupcharge_logo.png", color: Colors.white70,),
+            child: Image.asset("assets/images/yupcharge_logo.png", color: Colors.white,),
           ),
           DrawerListTile(
             title: "Dashboard",
@@ -90,12 +91,12 @@ class DrawerListTile extends StatelessWidget {
       horizontalTitleGap: 0.0,
       leading: SvgPicture.asset(
         svgSrc,
-        color: Colors.white54,
-        height: 16,
+        color: orange,
+        height: 19,
       ),
       title: Text(
         title,
-        style: TextStyle(color: Colors.white54),
+        style: TextStyle(color: Colors.white),
       ),
     );
   }
