@@ -1,4 +1,3 @@
-import 'package:yupcity_admin/models/user.dart';
 
 class ResponseAuthYupcity {
 

@@ -15,6 +15,14 @@ class LoadingTrapsBlocState extends DevicesBlocState {
   List<Object> get props => [];
 }
 
+
+class DeleteTrapsBlocState extends DevicesBlocState {
+
+  const DeleteTrapsBlocState();
+  @override
+  List<Object> get props => [];
+}
+
 class UpdatedDataTrapsBlocState extends DevicesBlocState {
 
 

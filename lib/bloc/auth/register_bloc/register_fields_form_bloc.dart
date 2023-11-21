@@ -1,12 +1,11 @@
 import 'package:yupcity_admin/services/application/login_logic.dart';
 import 'package:yupcity_admin/services/application/register_logic.dart';
 import 'package:flutter_form_bloc/flutter_form_bloc.dart';
-import 'package:yupcity_admin/services/application/login_logic.dart';
-import 'package:yupcity_admin/services/application/register_logic.dart';
 
 class RegisterFieldsFormBloc extends FormBloc<String, String> {
 
 
+  final textCustomer = TextFieldBloc();
   final textName = TextFieldBloc();
   final textEmail = TextFieldBloc();
   final textTelephone = TextFieldBloc();
@@ -17,6 +16,7 @@ class RegisterFieldsFormBloc extends FormBloc<String, String> {
 
   RegisterFieldsFormBloc() {
     addFieldBlocs(fieldBlocs: [
+      textCustomer,
       textName,
       textEmail,
       textTelephone,
@@ -27,6 +27,7 @@ class RegisterFieldsFormBloc extends FormBloc<String, String> {
   }
 
   void addErrors() {
+    textCustomer.addFieldError('Introduzca el clientId');
     textName.addFieldError('Introduzca el nombre');
     textEmail.addFieldError('Introduzca email');
     textPassword.addFieldError('Introduzca contraseña');
@@ -36,12 +37,12 @@ class RegisterFieldsFormBloc extends FormBloc<String, String> {
   @override
   void onSubmitting() async {
     try {
-      var datsmiRegisterLogic = YupchargeRegisterLogic();
+      var registerLogic = FirebaseRegisterLogic();
       textTelephone.updateInitialValue("");
-      var responseRegister = await datsmiRegisterLogic.register(textName.value, textEmail.value, textTelephone.value, textPassword.value);
-      var datsmiLoginLogic = YupchargeLoginLogic();
-      var token = await datsmiLoginLogic.login(textEmail.value, textPassword.value);
-      emitSuccess(successResponse: token, canSubmitAgain: true);
+      var responseRegister = await registerLogic.register("", textCustomer.value, textName.value, textEmail.value, textTelephone.value, textPassword.value, "admin");
+      var loginLogic = FirebaseLoginLogic();
+      var token = await loginLogic.login(textEmail.value, textPassword.value);
+      emitSuccess(successResponse: "", canSubmitAgain: true);
     } catch (e) {
       emitFailure(failureResponse:e.toString());
     }

@@ -1,16 +1,19 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:yupcity_admin/bloc/dashboard/dashboard_bloc.dart';
 import 'package:yupcity_admin/bloc/dashboard/dashboard_bloc_event.dart';
 import 'package:yupcity_admin/bloc/dashboard/dashboard_bloc_state.dart';
-import 'package:yupcity_admin/controllers/MenuController.dart';
+import 'package:yupcity_admin/controllers/CurrentMenuController.dart';
 import 'package:yupcity_admin/models/events/NavigationScreen.dart';
+import 'package:yupcity_admin/models/events/RefreshEvent.dart';
 import 'package:yupcity_admin/models/user.dart';
 import 'package:yupcity_admin/models/yupcity_register.dart';
 import 'package:yupcity_admin/models/yupcity_trap_poi.dart';
 import 'package:yupcity_admin/responsive.dart';
 import 'package:yupcity_admin/screens/dashboard/dashboard_screen.dart';
 import 'package:yupcity_admin/screens/traps/devices_screen.dart';
+import 'package:yupcity_admin/screens/traps/pin_trap.dart';
 import 'package:yupcity_admin/screens/users/user_screen.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
@@ -37,10 +40,35 @@ class _MainScreenState extends State<MainScreen> {
   void initState() {
     super.initState();
     _registerEvents();
+
     _dashboardBloc.add(GetAllDataEvent());
+    checkBluetooth();
+  }
+
+  void checkBluetooth() async {
+    if(!await Permission.bluetooth.isGranted) {
+      await Permission.bluetooth.request();
+    }
+
+    if(!await Permission.bluetoothScan.isGranted) {
+      await Permission.bluetoothScan.request();
+    }
+
+    if(!await Permission.bluetoothConnect.isGranted) {
+      await Permission.bluetoothConnect.request();
+    }
   }
 
   void _registerEvents() async {
+    GetIt.I.get<EventBus>().on<RefreshEvent>().listen((event) {
+      if (mounted) {
+        usersList = [];
+        trapsList = [];
+        registerList = [];
+        _dashboardBloc.add(GetAllDataEvent());
+      }
+    });
+
     GetIt.I.get<EventBus>().on<NavigationScreen>().listen((event) {
       if (mounted) {
         setState(() {
@@ -55,6 +83,8 @@ class _MainScreenState extends State<MainScreen> {
       switch (routeName) {
         case "dashboard":
           return DashboardScreen(usersList, trapsList, registerList);
+        case "pin_trap":
+          return PinTrapScreen(trapsList, null);
         case "users":
           return UserScreen(usersList, trapsList, registerList);
         case "devices":
@@ -70,8 +100,8 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(
-          create: (context) => MenuController(),
+        ChangeNotifierProvider<ChangeNotifier>(
+          create: (context) => GetIt.I.get<CurrentMenuController>()
         ),
       ],
       child: BlocProvider(
@@ -107,8 +137,8 @@ class _MainScreenState extends State<MainScreen> {
           child: BlocBuilder<DashboardBloc, DashboardBlocState>(
             builder: (context, state) {
               return Scaffold(
-                key: context
-                    .read<MenuController>()
+                key:
+                    GetIt.I.get<CurrentMenuController>()
                     .scaffoldKey,
                 drawer: SideMenu(),
                 body: SafeArea(

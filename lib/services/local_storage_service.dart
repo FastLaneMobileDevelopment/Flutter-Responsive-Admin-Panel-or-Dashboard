@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:yupcity_admin/models/events/FoundNewDevice.dart';
 import 'package:yupcity_admin/models/user.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -15,13 +16,16 @@ class LocalStorageService {
   static const String themeColor = "themeColor";
   static const String token = "token";
   static const String seconds = "secondsConfigured";
-  static const String call = "call";
+  static const String roles = "roles";
+  static const String tenant = "tenant";
+  static const String customerId = "customerId";
   static const String gps = "gps";
   static const String email = "email";
   static const String avatar = "avatar";
   static const String cUserName = "cUserName";
   static const String cEmail = "cEmail";
   static const String application = "app";
+  static const String locksData = "locksData";
   static const String onBoarding = "onBoarding";
   static const String rememberMe = "rememberMe";
   static const String language = "language";
@@ -36,6 +40,40 @@ class LocalStorageService {
     _instance = LocalStorageService();
     _preferences = await SharedPreferences.getInstance();
     return _instance;
+  }
+
+  setLocks(List<FoundNewDevice> devices) {
+    try {
+      if (devices.isEmpty) {
+        saveStringToDisk(locksData, "");
+      }
+      else {
+        String data = json.encode(devices);
+        saveStringToDisk(locksData, data);
+      }
+    }
+    catch(e)
+    {
+        debugPrint(e.toString());
+    }
+  }
+
+  List<FoundNewDevice> getLocks() {
+    var lockData = getFromDisk(locksData);
+    if (lockData == null) {
+      return List<FoundNewDevice>.empty(growable: true);
+    }
+
+    if ((lockData as String).isEmpty) {
+      return List<FoundNewDevice>.empty(growable: true);
+    }
+
+    try {
+      var list = json.decode(lockData);
+      return (list as List<dynamic>).map((e) => FoundNewDevice.fromJson(e)).toList(growable:true);
+    } catch(ex) {
+       return List<FoundNewDevice>.empty(growable: true);
+    }
   }
 
   setApp(String app) {
@@ -200,17 +238,44 @@ class LocalStorageService {
     return int.parse(secondsValue);
   }
 
-  setCall(bool callToken) {
-    saveStringToDisk(call, callToken.toString());
+  setCustomer(String customerData) {
+    saveStringToDisk(customerId, customerData);
   }
 
-  bool getCall() {
-    var tokenData = getFromDisk(call);
-    if (tokenData == null) {
-      return true;
+  String getCustomer() {
+    var customerData = getFromDisk(customerId);
+    if (customerData == null) {
+      return "";
     }
 
-    return tokenData == "true";
+    return customerData.toString();
+  }
+
+
+  String getTenant() {
+    var tenantData = getFromDisk(tenant);
+    if (tenantData == null) {
+      return "";
+    }
+
+    return tenantData.toString();
+  }
+
+  setTenant(String tenantData) {
+    saveStringToDisk(tenant, tenantData);
+  }
+
+  setRoles(String rolesData) {
+    saveStringToDisk(roles, rolesData);
+  }
+
+  String getRoles() {
+    var rolesData = getFromDisk(roles);
+    if (rolesData == null) {
+      return "user";
+    }
+
+    return rolesData.toString();
   }
 
   setUsername(String currentUsername) {

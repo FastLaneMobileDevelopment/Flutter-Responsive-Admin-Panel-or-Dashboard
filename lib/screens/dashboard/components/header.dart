@@ -1,10 +1,12 @@
 import 'package:event_bus/event_bus.dart';
 import 'package:get_it/get_it.dart';
-import 'package:yupcity_admin/controllers/MenuController.dart';
-import 'package:yupcity_admin/i18n.dart';
+import 'package:yupcity_admin/controllers/CurrentMenuController.dart';
 import 'package:yupcity_admin/models/events/LanguageEvent.dart';
+import 'package:yupcity_admin/models/events/RefreshEvent.dart';
+import 'package:yupcity_admin/models/events/TrapSearchEvent.dart';
 import 'package:yupcity_admin/models/events/UserSearchEvent.dart';
 import 'package:yupcity_admin/models/user.dart';
+import 'package:yupcity_admin/models/yupcity_trap_poi.dart';
 import 'package:yupcity_admin/responsive.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -26,10 +28,11 @@ class Header extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
+
         if (!Responsive.isDesktop(context))
           IconButton(
             icon: Icon(Icons.menu),
-            onPressed: context.read<MenuController>().controlMenu,
+            onPressed: GetIt.I.get<CurrentMenuController>().controlMenu,
           ),
         if (!Responsive.isMobile(context))
           Text(
@@ -41,10 +44,16 @@ class Header extends StatelessWidget {
         if(route == "users")
         Expanded(child:
          SearchField(route: route,items: itemList,)),
+        if (route == "devices")
+          Expanded(child:
+          SearchField(route: route,items: itemList,)),
         if(route == "dashboard")
             Expanded(child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
+                IconButton(onPressed: () {
+                  GetIt.I.get<EventBus>().fire(RefreshEvent());
+                }, icon: Icon(Icons.refresh)),
                 LanguageCard(),
               ],
             )),
@@ -165,7 +174,8 @@ class SearchField extends StatelessWidget {
    _search(String route, List items, String value) {
      var eventBus = GetIt.I.get<EventBus>();
      List<YupcityUser> searchUsers = [];
-     List<YupcityUser> list = [];
+
+     List<YupcityTrapPoi> searchTraps = [];
 
 
      //Search User
@@ -176,15 +186,23 @@ class SearchField extends StatelessWidget {
              searchUsers.add(user);
            }
          }
-
-
-         eventBus.fire(UserSearchEvent(users: searchUsers));
        }
 
-       //Search Traps
-       if (route == "traps") {
-         //TODO if is neccesary add trap search
+       eventBus.fire(UserSearchEvent(users: searchUsers));
+     }
+
+     if (route == "devices") {
+       for (var trap in items) {
+         if  (trap is YupcityTrapPoi) {
+           var centerText = (trap.center ?? "").toLowerCase();
+           var centerDescriptionText = (trap.centerDescription ?? "").toLowerCase();
+           if (centerText.indexOf(value) > -1 || centerDescriptionText.indexOf(value) > -1) {
+             searchTraps.add(trap);
+           }
+         }
        }
+
+       eventBus.fire(TrapSearchEvent(traps: searchTraps));
      }
    }
 }

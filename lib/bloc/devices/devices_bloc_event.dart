@@ -1,4 +1,3 @@
-import 'package:yupcity_admin/models/user.dart';
 import 'package:equatable/equatable.dart';
 import 'package:yupcity_admin/models/yupcity_register.dart';
 import 'package:yupcity_admin/models/yupcity_trap_poi.dart';
@@ -20,6 +19,18 @@ class GetTrapsWithRegistriesEvent extends DevicesBlocEvent{
 
 }
 
+
+class DeleteTrapEvent extends DevicesBlocEvent{
+
+
+  final String  trapId;
+
+  const DeleteTrapEvent(this.trapId);
+
+  @override
+  List<Object> get props => [];
+
+}
 
 
 

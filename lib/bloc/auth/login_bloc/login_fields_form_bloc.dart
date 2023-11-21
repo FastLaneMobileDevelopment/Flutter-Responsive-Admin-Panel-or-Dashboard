@@ -24,9 +24,14 @@ class LoginFieldsFormBloc extends FormBloc<String, String> {
   @override
   void onSubmitting() async {
     try {
-      var datsmiLoginLogic = YupchargeLoginLogic();
-      var response = await datsmiLoginLogic.login(textEmail.value, textPassword.value);
-      emitSuccess(successResponse: response, canSubmitAgain: false);
+      var loginLogic = FirebaseLoginLogic();
+      var response = await loginLogic.login(textEmail.value, textPassword.value);
+      if (!response.toString().contains("firebase")) {
+        emitSuccess(successResponse: response, canSubmitAgain: true);
+      }
+      else {
+          emitFailure(failureResponse:response);
+      }
     } catch (e) {
       emitFailure(failureResponse:e.toString());
     }

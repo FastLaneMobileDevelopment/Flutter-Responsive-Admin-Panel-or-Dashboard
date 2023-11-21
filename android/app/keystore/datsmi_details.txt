@@ -1,0 +1,28 @@
+Alias name: datsmi
+Password: maroof
+Keystore password: maroof
+
+
+Creation date: 23 Jun, 2021
+Entry type: PrivateKeyEntry
+Certificate chain length: 1
+Certificate[1]:
+Owner: CN=Datsmi, OU=100, O=Mindcrew, L=Indore, ST=MP, C=91
+Issuer: CN=Datsmi, OU=100, O=Mindcrew, L=Indore, ST=MP, C=91
+Serial number: 23d30b49
+Valid from: Wed Jun 23 11:53:51 IST 2021 until: Fri May 30 11:53:51 IST 2121
+Certificate fingerprints:
+         SHA1: 1B:B2:19:D2:1B:C3:8D:1A:19:1D:45:3C:71:82:FD:AA:8D:60:E1:D1
+         SHA256: 2C:5D:76:5C:38:73:66:D1:7D:E8:73:D9:09:90:24:01:16:60:88:7A:71:97:FB:31:C5:2B:73:35:5C:53:DE:9E
+Signature algorithm name: SHA256withRSA
+Subject Public Key Algorithm: 2048-bit RSA key
+Version: 3
+
+Extensions:
+
+#1: ObjectId: 2.5.29.14 Criticality=false
+SubjectKeyIdentifier [
+KeyIdentifier [
+0000: E9 BF 72 64 16 4F E6 4B   C0 A2 AA 04 0D 5D 03 4C  ..rd.O.K.....].L
+0010: 5B 8A F7 7E                                        [...
+]

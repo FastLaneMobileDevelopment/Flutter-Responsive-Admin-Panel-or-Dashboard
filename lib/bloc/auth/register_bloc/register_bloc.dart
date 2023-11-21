@@ -11,9 +11,7 @@ import 'package:flutter/cupertino.dart';
 class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
 
   final RegisterLogic? logic;
- RegisterBloc ({@required this.logic}) : super(InitialRegisterState()) {
-
- }
+ RegisterBloc ({@required this.logic}) : super(InitialRegisterState());
   @override
   RegisterState get initialState => InitialRegisterState();
 
@@ -24,7 +22,7 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
     if(event is DoRegisterEvent){
       yield RegisterinInBlocState();
       try{
-        var doneRegister =  await logic?.register(event.name,event.email,event.telephone, event.password);
+       // var doneRegister =  await logic?.register(event.name,event.email,event.telephone, event.password);
         yield RegisteredInBlocState(true);
       }on RegisterException{
         yield ErrorRegisterBlocState("Fallo en el registro");

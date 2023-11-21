@@ -17,6 +17,7 @@ description,Descripción,Description
 logs,Usos,Logs
 add_new,Agregar Nuevo,Add New
 language,Lenguaje,Language
+edit_trap,Editar trap/soca,Edit trap/soca
 how_create_new_trap,Mantén presionado para nuevo trap,Long press to create a new trap
 new_trap,Nuevo trap,New trap
 trap_name,Nombre del Trap (Alias o Lugar),Trap's name (nick name or center)
@@ -39,3 +40,53 @@ create_at,Creado el,Create at
 opened,Abierto,Opened
 closed,Cerrado,Closed
 of_use,de uso,of use
+main_start,Iniciar,Start
+new_trap_continue,continuar,continue
+new_trap_previous,anterior,previous
+new_trap_definetrap,Defina el nombre y el nombre de la ubicación,Define the name and location name
+new_trap_selectfirst,Configure el primer cierre,Configure first lock
+new_trap_selectsecond,Configure el segundo cierre,Configure second lock
+new_trap_selectthird,Configure el tercer cierre,Configure third lock
+new_trap_selectfour,configure el cuarto cierre,Configure fourth lock
+new_trap_endtrap,Guardar datos del trap,Save trap data
+new_trap_associate_lock,Associar Lock,Bind Lock
+new_trap_unassociate_lock,Desassociar Lock,Unbind Lock
+new_trap_lock_name,Nombre cierre,Lock Name
+new_trap_lock_mac,Mac cierre,Lock Mac
+new_trap_lock_data,LockData,LockData
+new_trap_lock_associate,Associar,Associate
+new_trap_lock_open,Abrir,Open
+new_trap_lock_close,Cerrar,Close
+locks_name,Cierres,Locks
+login_init,Iniciar,Login
+dialog_attention,Atención,Attention
+recover_change,Salvar,Save
+recover_title,Recuperar contraseña,Recover password
+recover_email,Correo,Email
+recover_new_password,Nueva contraseña,New password
+recover_hint,Introduce tu correo,Intro your email
+recover_otp_email,Introduzca nueva contraseña,Intro a new password
+recover_otp_confirm_email,Confirme contraseña,Confirm password
+recover_go,Recuperar,Recover
+recover_otp,Introduce tu contraseña temporal,Intro your temporal password
+recover_otp_help,Se ha enviado un email con una contraseña temporal,A Email was sent with a temporal password
+check_email,Introduzca email,Intro your email
+check_otp,Introduzca el código único,Intro el unique code
+check_password,Introduzca la contraseña,Intro your password
+check_password_confirm,Confirma la contraseña,Confirm your password
+change_password,Cambio de contraseña correcto,Password change sucessful
+exit_title,Atención,Attention
+exit_message,Vas a salir de Yup.city,You will exit from Yup.city
+dialog_ok,Aceptar,Ok
+dialog_cancel,Cancelar,Cancel
+dialog_sucess,¡Éxito!,Success!
+login_title,Hey,Hey
+login_message,¡Me alegro\n de verte!,It's nice\n to see you!
+login_recover,Recuperar contraseña,Recover Password
+login_register,Registro,Register
+login_login,Iniciar,Login
+textfield_name,Nombre,Name
+textfield_email,Email,Email
+textfield_password,Contraseña,Password
+textfield_telephone,Teléfono,Telephone
+textfield_confirmpassword,Confirmar Contraseña,Confirm Password

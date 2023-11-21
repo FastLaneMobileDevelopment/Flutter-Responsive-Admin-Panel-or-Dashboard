@@ -97,7 +97,7 @@ class DashboardScreen extends StatelessWidget {
     cardsList.add(
         CardInfo(
           title: I18n.of(context).traps_occupied,
-          total: 0,
+          total: allRegistries.where((element) => (element.createdAt ?? "").contains("13")).toList().length,
           svgSrc: "assets/icons/lock.svg",
           route: "devices",
           color: primaryColor,

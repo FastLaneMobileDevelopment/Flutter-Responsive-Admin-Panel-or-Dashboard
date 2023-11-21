@@ -7,6 +7,8 @@ import 'http_interceptors/auth_interceptor.dart';
 
 class HttpClient {
 
+  final Dio _dio = Dio();
+
   HttpClient() {
     _dio.interceptors..add(AuthInterceptor())..add(
           DioCacheManager(cacheConfig).interceptor);
@@ -14,8 +16,8 @@ class HttpClient {
     _dio.options.headers.putIfAbsent("Access-Control-Allow-Origin", () => "*");
     _dio.options.headers.putIfAbsent("Access-Control-Allow-Headers", () => "Access-Control-Allow-Origin, Accept");
 
-    //if (DebugMode.isInDebugMode) {
-    _dio.interceptors.add(
+    //if () {
+      _dio.interceptors.add(
         PrettyDioLogger(
           requestHeader: true,
           requestBody: true,
@@ -23,11 +25,11 @@ class HttpClient {
           responseBody: true,
         ),
       );
+    //}
   }
 
   final CacheConfig cacheConfig = CacheConfig();
 
-  final Dio _dio = Dio();
 
   Dio get dio {
 

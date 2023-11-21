@@ -1,3 +1,4 @@
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:yupcity_admin/models/user.dart';
 import 'package:equatable/equatable.dart';
 import 'package:yupcity_admin/models/yupcity_register.dart';
@@ -29,6 +30,29 @@ class UpdateAllDataEvent extends DashboardBlocEvent{
 class GetUserDataEvent extends DashboardBlocEvent{
 
   const GetUserDataEvent();
+  @override
+  List<Object> get props => [];
+
+}
+
+class SetEditPositionEvent extends DashboardBlocEvent{
+
+  final String id;
+
+  final double lat;
+
+  final double lon;
+
+  final String center;
+
+  final String centerDescription;
+
+  final String type;
+
+  final String customerId;
+
+  const SetEditPositionEvent(this.id, this.lat, this.lon, this.center, this.centerDescription, this.type, this.customerId);
+
   @override
   List<Object> get props => [];
 

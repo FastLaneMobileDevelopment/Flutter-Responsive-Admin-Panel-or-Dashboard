@@ -1,11 +1,18 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:yupcity_admin/bloc/auth/login_bloc/login_fields_form_bloc.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_bloc/flutter_form_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:yupcity_admin/screens/main/main_screen.dart';
+import 'package:yupcity_admin/screens/recovery_password.dart';
+import 'package:yupcity_admin/screens/register_page.dart';
+import 'package:yupcity_admin/services/local_storage_service.dart';
 import 'package:yupcity_admin/services/navigator_service.dart';
+
+import '../i18n.dart';
 
 class LoginScreenPage extends StatefulWidget {
   const LoginScreenPage({Key? key}) : super(key: key);
@@ -39,17 +46,12 @@ class _LoginScreenPageState extends State<LoginScreenPage> {
       child: Builder(builder: (BuildContext context) {
         final formBloc = BlocProvider.of<LoginFieldsFormBloc>(context);
         if (kDebugMode) {
-          formBloc.textEmail.updateInitialValue("jordi.buges@gmail.com");
-          formBloc.textPassword.updateInitialValue("123456");
-          /*formBloc.textEmail.updateInitialValue("jgrimal90@gmail.com");
-          formBloc.textPassword.updateInitialValue("12345678");*/
-          //formBloc.textEmail.updateInitialValue("holahola@gmail.com");
-          //formBloc.textPassword.updateInitialValue("12345678");
+          formBloc.textEmail.updateInitialValue("jordi.buges+929@gmail.com");
+          formBloc.textPassword.updateInitialValue("12345678");
         }
 
         return
            Scaffold(
-              // backgroundColor: Colors.black,
               backgroundColor: const Color(0xFF212332),
               body: FormBlocListener<LoginFieldsFormBloc, String, String>(
                 onSubmitting: (context, state) {
@@ -57,26 +59,55 @@ class _LoginScreenPageState extends State<LoginScreenPage> {
                   var password = formBloc.textPassword.value;
                   // BlocProvider.of<LoginBlocBloc>(context).add(DoLoginEvent(email, password));
                 },
-                onSuccess: (context, state) {
+                onSuccess: (context, state) async {
                   if (state is FormBlocSuccess<String, String>) {
-                    GetIt.I.get<NavigationService>().navigateToWithParams(
-                        NavigationService.dashBoardPage,
-                        state.successResponse);
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) =>  MainScreen()),
-                    );
+                    if (GetIt.I.get<LocalStorageService>().getEmail()) {
+                      GetIt.I.get<NavigationService>().navigateToWithParams(
+                          NavigationService.dashBoardPage,
+                          state.successResponse);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => MainScreen()),
+                      );
+                    }
+                    else {
+                      await Alert(context: context,
+                          style: AlertStyle(
+                            backgroundColor: Colors.white
+                          ),
+
+                          type: AlertType.info,
+                          desc:  "Debe confirmar su correo electronico, vaya a su inbox y revise si ha llegado la verificación del correo. Compruebe la carpeta spam.",
+                          buttons: [
+                            DialogButton(child: Text("Reenviar correo"), onPressed: () async {
+                              await FirebaseAuth.instance.currentUser?.sendEmailVerification();
+                              await FirebaseAuth.instance.signOut();
+                              Navigator.of(context, rootNavigator: true).pop();
+
+
+                            }),
+                            DialogButton(child: Text("OK"), onPressed: () async {
+                              await FirebaseAuth.instance.signOut();
+                              Navigator.of(context, rootNavigator: true).pop();
+                            })
+
+                          ]
+
+
+                      ).show();
+                    }
+
                   }
 
                   //LoadingDialog.hide(context);
                 },
                 onFailure: (context, state) {
-               /*   Fluttertoast.showToast(
+                 Fluttertoast.showToast(
                       msg: state.failureResponse!,
                       toastLength: Toast.LENGTH_SHORT,
                       gravity: ToastGravity.CENTER,
-                      timeInSecForIosWeb: 1
-                  );*/
+                      timeInSecForIosWeb: 5
+                  );
                 },
                 child: Stack(
                   children: [
@@ -125,7 +156,6 @@ class _LoginScreenPageState extends State<LoginScreenPage> {
                                   focusColor: Color(0xFF2A2D3E),
                                   hoverColor: Color(0xFF2A2D3E),
                                   border: OutlineInputBorder(
-
                                     borderRadius: BorderRadius.circular(10.0),
                                     borderSide: const BorderSide(
                                       width: 0,
@@ -140,11 +170,9 @@ class _LoginScreenPageState extends State<LoginScreenPage> {
                                 ),
                               ),
                               TextFieldBlocBuilder(
-
                                 textFieldBloc: formBloc.textPassword,
                                 suffixButton: SuffixButton.obscureText,
                                 autofillHints: const [AutofillHints.password],
-
                                 decoration: InputDecoration(
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(10.0),
@@ -179,31 +207,38 @@ class _LoginScreenPageState extends State<LoginScreenPage> {
                               const SizedBox(
                                 height: 40,
                               ),
-                              /*RawMaterialButton(
-                                  onPressed: onPressedRecover,
-                                  child: Text("Iniciar")), */
+                              RawMaterialButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(builder: (context) =>  RecoverLoginPage()),
+                                    );
+
+                                  },
+                                  child: Text(I18n.of(context).recover_title)),
                               ElevatedButton(
                                 onPressed: () {
-                                  //GetIt.I.get<NavigationService>().navigateTo("datsmi_dash boarPage");
+                                  // GetIt.I.get<NavigationService>().navigateTo("datsmi_dashboarPage");
                                   formBloc.submit();
                                 },
                                 style: ButtonStyle(
-                                    padding: MaterialStateProperty.all<EdgeInsets>(
-                                        const EdgeInsets.symmetric(
-                                            vertical: 15, horizontal: 60)),
-                                    backgroundColor:
-                                        MaterialStateProperty.all<Color>(Colors.blue),
-                                    shape: MaterialStateProperty.all(
-                                        const StadiumBorder())),
-                                child: Text("Iniciar"),
+                                    padding: MaterialStateProperty.all<EdgeInsets>(const EdgeInsets.symmetric(vertical: 15, horizontal: 60)),
+                                    backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
+                                    shape: MaterialStateProperty.all(const StadiumBorder())),
+                                child: Text(I18n.of(context).login_init),
                               ),
-                             /* RawMaterialButton(
-                                  onPressed: onPressedRegister,
+                              RawMaterialButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(builder: (context) =>  RegisterScreenPage()),
+                                    );
+                                  },
                                   child: Text(
                                     I18n.of(context).login_register,
                                     style:
                                         const TextStyle(fontWeight: FontWeight.bold),
-                                  )),*/
+                                  )),
                             ],
                           ),
                         ),
@@ -219,13 +254,5 @@ class _LoginScreenPageState extends State<LoginScreenPage> {
   @override
   void dispose() {
     super.dispose();
-  }
-
-  void onPressedRecover() {
-    GetIt.I.get<NavigationService>().navigateTo(NavigationService.recoverPage);
-  }
-
-  void onPressedRegister() {
-    GetIt.I.get<NavigationService>().navigateTo(NavigationService.registerPage);
   }
 }

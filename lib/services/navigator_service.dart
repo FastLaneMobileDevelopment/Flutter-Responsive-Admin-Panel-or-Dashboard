@@ -54,13 +54,7 @@ class NavigationService {
 
   void navigateTo(String routeName) {
     currentPage = routeName;
-    Navigator.pushReplacement(
-      navigatorKey.currentContext as BuildContext,
-      FadeNamedPageTransition(
-        appKey,
-        routeName,
-      ),
-    );
+    navigatorKey.currentState?.pushNamed(routeName);
     // navigatorKey.currentState?.pushReplacementNamed(routeName);
   }
 

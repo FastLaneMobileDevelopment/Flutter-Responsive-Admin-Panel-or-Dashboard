@@ -6,7 +6,7 @@ import 'login_bloc_event.dart';
 import 'login_bloc_state.dart';
 
 class LoginBlocBloc extends Bloc<LoginBlocEvent, LoginBlocState> {
-  LoginBlocBloc({@required this.logic}) : super(InitialLoginBlocState()) {}
+  LoginBlocBloc({@required this.logic}) : super(InitialLoginBlocState());
 
   final LoginLogic? logic;
 

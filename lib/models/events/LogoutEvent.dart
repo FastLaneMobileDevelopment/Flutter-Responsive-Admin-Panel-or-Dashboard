@@ -1,0 +1,12 @@
+
+class LogoutEvent {
+
+
+
+
+  const LogoutEvent();
+
+
+
+}
+

@@ -8,7 +8,6 @@ import 'package:yupcity_admin/responsive.dart';
 import 'package:yupcity_admin/screens/traps/add_new_trap.dart';
 import 'package:yupcity_admin/screens/traps/devices_table.dart';
 import 'package:flutter/material.dart';
-
 import '../../../constants.dart';
 import 'package:yupcity_admin/screens/dashboard/components/header.dart';
 
@@ -56,7 +55,7 @@ class DevicesScreen extends StatelessWidget {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const AddNewTrapScreen()),
+                      MaterialPageRoute(builder: (context) => const AddNewOrEditTrapScreen(editTrapPoi: null,)),
                     );
                   },
                   icon: Icon(Icons.add),

@@ -4,10 +4,13 @@ class WidgetService
 {
   static Widget createIconButton(BuildContext context, Image image, String text, Function click)
   {
-    return FlatButton(
+    return TextButton(
 
+      style: ButtonStyle(
+        padding: MaterialStateProperty.all<EdgeInsets>(
+            EdgeInsets.all(8.0)),
 
-      padding: EdgeInsets.all(8.0),
+      ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[

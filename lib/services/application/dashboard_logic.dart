@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:yupcity_admin/models/YupcityPoiUpdateRequest.dart';
 import 'package:yupcity_admin/models/user.dart';
 import 'package:yupcity_admin/models/yupcity_register.dart';
 import 'package:yupcity_admin/models/yupcity_trap_poi.dart';
@@ -10,7 +11,9 @@ abstract class DashboardLogic {
   Future<List<YupcityTrapPoi>> getPois();
   Future<List<YupcityUser>> getUsers();
   Future<List<YupcityRegister>> getRegistries();
+  Future<bool> updatePoi(String id, YupcityPoiUpdateRequest request);
   Future<bool> setPoi(YupcityTrapPoi yupcityTrapPoi);
+  Future<bool> removeLockData(String trapId, String lockId);
   Future<YupcityUser> getUser(String id);
   Future<YupcityUser> getUserByUsername(String id);
 }
@@ -71,7 +74,7 @@ class YupcityDashboardLogic extends DashboardLogic {
   Future<bool> setPoi(YupcityTrapPoi poi) async {
     String baseUrl = Environments().getHost("Production","application");
     var finalUrlGet= baseUrl + "/traps/create";
-    var responseGet = await GetIt.I.get<HttpClient>().dio.post(finalUrlGet, data: poi.toJson());
+    var responsePost = await GetIt.I.get<HttpClient>().dio.post(finalUrlGet, data: poi.toJson());
     return Future.value(true);
   }
 
@@ -101,6 +104,44 @@ class YupcityDashboardLogic extends DashboardLogic {
       debugPrint(e.toString());
       return YupcityUser();
     }
+  }
+
+  @override
+  Future<bool> removeLockData(String trapId, String lockId) async {
+    String baseUrl = Environments().getHost("Production","application");
+    var finalUrl= baseUrl + "/traps/updateData/" + trapId;
+    try {
+     /* var responsePost = await GetIt.I
+          .get<HttpClient>()
+          .dio
+          .put(finalUrl, data: request.toJson());*/
+    }catch(e)
+    {
+      var error =  e.toString();
+      print(error);
+    }
+    return Future.value(true);
+
+
+    return Future.value(true);
+  }
+
+  @override
+  Future<bool> updatePoi(String id, YupcityPoiUpdateRequest request) async {
+    // TODO: implement updatePoi
+    String baseUrl = Environments().getHost("Production","application");
+    var finalUrl= baseUrl + "/traps/updateData/" + id;
+    try {
+      var responsePost = await GetIt.I
+          .get<HttpClient>()
+          .dio
+          .put(finalUrl, data: request.toJson());
+    }catch(e)
+    {
+      var error =  e.toString();
+      print(error);
+    }
+    return Future.value(true);
   }
 
 }

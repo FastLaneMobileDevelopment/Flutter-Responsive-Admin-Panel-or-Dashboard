@@ -4,8 +4,9 @@ import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get_it/get_it.dart';
+import 'package:yupcity_admin/responsive.dart';
 import 'package:yupcity_admin/screens/login_page.dart';
-import 'package:yupcity_admin/screens/main/main_screen.dart';
+import 'package:yupcity_admin/services/local_storage_service.dart';
 import 'package:yupcity_admin/services/login_service.dart';
 
 import '../../../constants.dart';
@@ -51,6 +52,16 @@ class SideMenu extends StatelessWidget {
               Navigator.pop(context);
             },
           ),
+          /*Responsive.isMobile(context)  ?
+          DrawerListTile(
+            title: "Set Trap Location",
+            svgSrc: "assets/icons/menu_tran.svg",
+            press: () {
+              String route = "pin_trap";
+              GetIt.I.get<EventBus>().fire(NavigationScreen(routeName: route));
+              Navigator.pop(context);
+            },
+          ) : Container(),*/
           DrawerListTile(
             title: I18n.of(context).log_out,
             svgSrc: "assets/icons/menu_store.svg",

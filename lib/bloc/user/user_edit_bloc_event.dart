@@ -1,4 +1,3 @@
-import 'package:yupcity_admin/models/user.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class UserEditBlocEvent extends Equatable {

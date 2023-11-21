@@ -1,5 +1,4 @@
 import 'package:yupcity_admin/models/CardInfo.dart';
-import 'package:yupcity_admin/models/MyFiles.dart';
 import 'package:yupcity_admin/models/events/NavigationScreen.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';

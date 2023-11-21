@@ -1,3 +1,7 @@
+import 'dart:math';
+
+import 'package:flutter/foundation.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:yupcity_admin/bloc/auth/register_bloc/register_fields_form_bloc.dart';
 import 'package:yupcity_admin/services/navigator_service.dart';
 import 'package:flutter/material.dart';
@@ -25,19 +29,30 @@ class _RegisterScreenPageState extends State<RegisterScreenPage> {
     super.initState();
     _passwordVisible = true;
     _confirmPasswordVisible = true;
+
   }
 
   @override
   Widget build(BuildContext context) {
     _headLineStyle = Theme.of(context).textTheme.headline5;
     _textLineStyle = Theme.of(context).textTheme.bodyText1;
+
     late RegisterFieldsFormBloc formBloc;
     return BlocProvider(
       create: (context) => RegisterFieldsFormBloc(),
       child: Builder(builder: (BuildContext context) {
         formBloc = BlocProvider.of<RegisterFieldsFormBloc>(context);
+        if (kDebugMode) {
+            formBloc.textCustomer.updateValue("001");
+            formBloc.textEmail.updateValue("jordi.buges+" + Random(DateTime.now().microsecondsSinceEpoch).nextInt(999).toString() + "@gmail.com");
+            formBloc.textName.updateValue("jordi buges");
+            formBloc.textTelephone.updateValue("");
+            formBloc.textPassword.updateValue("12345678");
+            formBloc.textPassword2.updateValue("12345678");
+        }
         return Scaffold(
-            backgroundColor: const Color(0xFFF1F5F8),
+                         backgroundColor: const Color(0xFF212332),
+
             body: FormBlocListener<RegisterFieldsFormBloc, String, String>(
               onSubmitting: (context, state) {
                 //LoadingDialog.show(context);
@@ -50,12 +65,12 @@ class _RegisterScreenPageState extends State<RegisterScreenPage> {
               onFailure: (context, state) {
                 debugPrint(state.failureResponse);
                 // LoadingDialog.hide(context);
-              /*  Fluttertoast.showToast(
+                Fluttertoast.showToast(
                     msg: state.failureResponse!,
                     toastLength: Toast.LENGTH_SHORT,
                     gravity: ToastGravity.CENTER,
                     timeInSecForIosWeb: 1
-                );*/
+                );
               },
               child: SingleChildScrollView(
                 physics: const ClampingScrollPhysics(),
@@ -72,7 +87,7 @@ class _RegisterScreenPageState extends State<RegisterScreenPage> {
                           width: 300,
                           height: 100,
                           child: Image.asset(
-                            "assets/svg/yupcharge_logo.png",
+                            "assets/images/yupcharge_logo.png",
                           ),
                         ),
                         const SizedBox(
@@ -89,10 +104,22 @@ class _RegisterScreenPageState extends State<RegisterScreenPage> {
                           height: 40,
                         ),*/
                         TextFieldBlocBuilder(
+                            textFieldBloc: formBloc.textCustomer,
+                            decoration: InputDecoration(
+                              labelText: "ClientId",
+                              filled: true,
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                                borderSide: const BorderSide(
+                                  width: 0,
+                                  style: BorderStyle.none,
+                                ),
+                              ),
+                            )),
+                        TextFieldBlocBuilder(
                             textFieldBloc: formBloc.textName,
                             decoration: InputDecoration(
                               labelText: "Name",
-                              fillColor: Colors.white,
                               filled: true,
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10.0),
@@ -106,7 +133,6 @@ class _RegisterScreenPageState extends State<RegisterScreenPage> {
                           textFieldBloc: formBloc.textEmail,
                           decoration: InputDecoration(
                             labelText: "Email",
-                            fillColor: Colors.white,
                             filled: true,
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10.0),
@@ -136,7 +162,6 @@ class _RegisterScreenPageState extends State<RegisterScreenPage> {
                           obscureText: _passwordVisible,
                           decoration: InputDecoration(
                             labelText: "Contraseña",
-                            fillColor: Colors.white,
                             filled: true,
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10.0),
@@ -170,7 +195,6 @@ class _RegisterScreenPageState extends State<RegisterScreenPage> {
                           decoration: InputDecoration(
                             labelText:
                                 "Confirmar contraseña",
-                            fillColor: Colors.white,
                             filled: true,
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10.0),
@@ -215,7 +239,7 @@ class _RegisterScreenPageState extends State<RegisterScreenPage> {
                         ),
                         RawMaterialButton(
                             onPressed: () {
-                              GetIt.I.get<NavigationService>().navigateTo(NavigationService.loginPage);
+                               Navigator.of(context).pop();
                             },
                             child: Text("Iniciar")),
                       ],
